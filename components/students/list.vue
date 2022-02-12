@@ -13,13 +13,13 @@
               <th>TEL</th>
               <th>プラン名</th>
             </tr>
-            <tr>
-              <td>丸山 宏二</td>
-              <td>20</td>
-              <td>2001/9/21</td>
-              <td>koji0921@ggmail.com</td>
-              <td>080-1234-5678</td>
-              <td>PREMIUM</td>
+            <tr v-for="student in students" :key="student">
+              <td>{{ student.name }}</td>
+              <td>{{ student.age }}</td>
+              <td>{{ student.birth }}</td>
+              <td>{{ student.mail }}</td>
+              <td>{{ student.tel }}</td>
+              <td>{{ student.plan }}</td>
               <td>
                 <div class="btn_group">
                   <NuxtLink to="/progress">
@@ -43,3 +43,32 @@
     </div>
   </div>
 </template>
+
+<script>
+
+
+export default {
+data(){
+  return {
+    students: [
+        {
+          name: "小林 空晏",
+          age: 21,
+          birth: '2000/02/19',
+          mail:'aaa@ggmail.com',
+          tel:'000-0000-0000',
+          plan:'PREMIUM'
+        },
+        {
+          name: "kuua kobayashi",
+          age: 22,
+          birth: '2000/01/16',
+          mail:'kuua@ggmail.com',
+          tel:'1230-0000-0000',
+          plan:'STANDARD'
+        },
+      ],
+  }
+}
+}
+</script>
