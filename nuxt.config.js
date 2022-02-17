@@ -15,7 +15,7 @@ export default {
   },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
-  css: ["~/static/css/style.css"],
+  css: ["~/static/css/style.css", "sanitize.css"],
 
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [],
@@ -27,7 +27,17 @@ export default {
   buildModules: [],
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: [],
+  modules: ["@nuxtjs/axios", "nuxt-fontawesome"],
+
+  fontawesome: {
+    component: "fa",
+    imports: [
+      {
+        set: "@fortawesome/free-solid-svg-icons", // Solidアイコン
+        icons: ["faHome", "faPlus", "faAngleRight","faSearch"],
+      },
+    ],
+  },
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {},

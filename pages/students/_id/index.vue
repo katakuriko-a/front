@@ -1,7 +1,7 @@
 <template>
-  <div class="new_wrapper">
+  <div class="main_wrapper">
     <div class="main_content signup_content">
-      <h2>新規登録画面</h2>
+      <h2>登録内容編集画面</h2>
       <form @submit.prevent method="post" action="">
         <div class="form_group form_name">
           <label for="name">名前</label>
@@ -71,8 +71,8 @@
             <option>STANDARD</option>
           </select>
         </div>
-        <button @click="store()" class="signup_btn btn_option">
-          <i class="fas fa-plus big_plus"></i>新規登録
+        <button @click="update()" class="signup_btn btn_option">
+          <i class="fas fa-plus big_plus"></i>内容を変更する
         </button>
       </form>
     </div>
@@ -85,28 +85,45 @@ import axios from "axios";
 export default {
   data() {
     return {
-      name:'',
-      age:'',
-      birth:'',
-      mail:'',
-      tel:'',
-      plan:'',
+      name: "",
+      age: "",
+      birth: "",
+      mail: "",
+      tel: "",
+      plan: "",
     };
   },
+  mounted() {
+    axios
+      .get(`http://localhost/api/edit/${this.$route.params.id}`)
+      .then((res) => {
+        console.log("hello from then");
+        this.name = res.data.name;
+        this.age = res.data.age;
+        this.birth = res.data.birth;
+        this.mail = res.data.mail;
+        this.tel = res.data.tel;
+        this.plan = res.data.plan;
+      })
+      .catch((error) => {
+        console.log(error);
+        this.result = "ERROR";
+      });
+  },
   methods: {
-    store() {
+    update() {
       const request = {
-        name : this.name,
-        age : this.age,
-        birth : this.birth,
-        mail : this.mail,
-        tel : this.tel,
-        plan : this.plan,
-      }
+        name: this.name,
+        age: this.age,
+        birth: this.birth,
+        mail: this.mail,
+        tel: this.tel,
+        plan: this.plan,
+      };
       axios
-        .post("http://localhost/api/store",request)
+        .post(`http://localhost/api/update/${this.$route.params.id}`, request)
         .then((res) => {
-          this.$router.push('/students');
+          this.$router.push("/students");
         })
         .catch((error) => {
           console.log(error);

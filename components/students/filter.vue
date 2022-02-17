@@ -3,41 +3,35 @@
     <div @click="coverClick()" class="cover" :class="{ show: show }"></div>
     <div class="filter_list" :class="{ open: open }">
       <div @click="backClick()" class="back btn_option">←</div>
-      <form method="get" action="" class="filter_form">
+      <form @submit.prevent method="get" action="" class="filter_form">
         <div class="filter_group">
           <label for="">名前</label>
-          <input type="text" name="name" id="" />
+          <input type="text" v-model="name" />
         </div>
         <div class="filter_group">
           <label for="">年齢</label>
-          <input type="number" name="age" id="" />
+          <input type="number" v-model="age" />
         </div>
         <div class="filter_group">
           <label for="">生年月日</label>
-          <input type="text" name="birth" id="" />
+          <input type="text" v-model="birth" />
         </div>
         <div class="filter_group">
           <label for="">e-mail</label>
-          <input type="text" name="mail" id="" />
+          <input type="text" v-model="mail" />
         </div>
         <div class="filter_group">
           <label for="">電話番号</label>
-          <input type="text" name="tel" id="" />
+          <input type="text" v-model="tel" />
         </div>
         <div class="filter_group">
           <label for="">プラン</label>
-          <input type="radio" name="plan" id="" value="STANDARD" /><span
+          <input type="radio" v-model="plan" value="STANDARD" /><span
             >STANDARD</span
           >
-          <input type="radio" name="plan" id="" value="PREMIUM" />PREMIUM
+          <input type="radio" v-model="plan" value="PREMIUM" />PREMIUM
         </div>
-        <input
-          type="submit"
-          name=""
-          id=""
-          value="検索"
-          class="filter_btn btn_option"
-        />
+        <button @click="search()" class="filter_btn btn_option">検索</button>
       </form>
     </div>
     <div :class="{ popup: popup }" class="csv-downloader">
@@ -64,6 +58,12 @@ export default {
       open: false,
       show: false,
       popup: false,
+      name: "",
+      age: "",
+      birth: "",
+      mail: "",
+      tel: "",
+      plan: "",
     };
   },
   methods: {
@@ -85,6 +85,9 @@ export default {
     csv() {
       this.popup = !this.popup;
       this.show = !this.show;
+    },
+    search() {
+      this.$emit("searchClick");
     },
   },
 };

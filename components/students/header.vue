@@ -6,6 +6,7 @@
         <input v-model="search" type="text" placeholder="名前検索" />
         <button>
           <i class="fas fa-search btn_option"></i>
+          <fa class="fas fa-search btn_option" :icon="['fas', 'search']" />
         </button>
       </form>
     </div>
