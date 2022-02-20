@@ -1,7 +1,8 @@
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
-    title: "front",
+    title: "ESA ACADEMY 生徒管理システム",
+    titleTemplate: '%s | ESA ACADEMY 生徒管理システム',
     htmlAttrs: {
       lang: "ja",
     },

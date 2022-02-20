@@ -16,14 +16,21 @@
             </tr>
 
             <tr v-for="post in posts" :key="post.title">
-              <td>{{post.title}}</td>
-              <td>{{post.content}}</td>
+              <td>{{ post.title }}</td>
+              <td>{{ post.content }}</td>
               <td>
                 <div class="btn_group">
                   <NuxtLink :to="'/progress/' + post.id + '/edit'">
                     <div class="edit_btn btn btn_option">編集</div>
                   </NuxtLink>
-                  <form @submit.prevent @click="destroy(post.id)" class="destroy" method="post" action="" id="destroy">
+                  <form
+                    @submit.prevent
+                    @click="destroy(post.id)"
+                    class="destroy"
+                    method="post"
+                    action=""
+                    id="destroy"
+                  >
                     <button class="delete_btn btn btn_option">削除</button>
                   </form>
                 </div>
@@ -31,11 +38,9 @@
             </tr>
           </tbody>
         </table>
-        <!-- @if ($row === 0)
-        <div class="alert alert-danger" role="alert">
-          進捗報告がまだありません。
+        <div v-if="isPosts" class="alert alert-danger" role="alert">
+          データが見つかりませんでした。
         </div>
-        @endif -->
       </div>
     </div>
   </div>
@@ -45,9 +50,16 @@
 import axios from "axios";
 
 export default {
+  head() {
+    return {
+      // nuxt.config.jsの%sに反映される内容
+      title: "進捗報告",
+    };
+  },
   data() {
     return {
       posts: [],
+      isPosts: false,
     };
   },
   mounted() {
@@ -55,6 +67,9 @@ export default {
       .get(`http://localhost/api/progress/${this.$route.params.id}`)
       .then((res) => {
         this.posts = res.data;
+        if (this.posts[0] == null) {
+          this.isPosts = true;
+        }
       })
       .catch((error) => {
         console.log(error);
@@ -66,7 +81,7 @@ export default {
       axios
         .delete(`http://localhost/api/progress/${id}/destroy`)
         .then(() => {
-          console.log('削除！');
+          console.log("削除！");
           location.reload();
         })
         .catch((error) => {

@@ -83,30 +83,36 @@
 import axios from "axios";
 
 export default {
+  head() {
+    return {
+      // nuxt.config.jsの%sに反映される内容
+      title: "新規登録画面",
+    };
+  },
   data() {
     return {
-      name:'',
-      age:'',
-      birth:'',
-      mail:'',
-      tel:'',
-      plan:'',
+      name: "",
+      age: "",
+      birth: "",
+      mail: "",
+      tel: "",
+      plan: "",
     };
   },
   methods: {
     store() {
       const request = {
-        name : this.name,
-        age : this.age,
-        birth : this.birth,
-        mail : this.mail,
-        tel : this.tel,
-        plan : this.plan,
-      }
+        name: this.name,
+        age: this.age,
+        birth: this.birth,
+        mail: this.mail,
+        tel: this.tel,
+        plan: this.plan,
+      };
       axios
-        .post("http://localhost/api/store",request)
+        .post("http://localhost/api/store", request)
         .then((res) => {
-          this.$router.push('/students');
+          this.$router.push("/students");
         })
         .catch((error) => {
           console.log(error);

@@ -83,6 +83,12 @@
 import axios from "axios";
 
 export default {
+    head() {
+    return {
+      // nuxt.config.jsの%sに反映される内容
+      title: "登録内容編集画面",
+    };
+  },
   data() {
     return {
       name: "",

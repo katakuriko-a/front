@@ -24,7 +24,7 @@
             placeholder="投稿内容を入力してください"
           ></textarea>
         </div>
-        <button @click="store()"  class="signup_btn btn_option">
+        <button @click="store()" class="signup_btn btn_option">
           <i class="fas fa-plus big_plus"></i>新規登録
         </button>
       </form>
@@ -36,21 +36,30 @@
 import axios from "axios";
 
 export default {
+  head() {
+    return {
+      // nuxt.config.jsの%sに反映される内容
+      title: "進捗報告新規作成画面",
+    };
+  },
   data() {
     return {
-      title:'',
-      content:'',
+      title: "",
+      content: "",
     };
   },
   methods: {
     store() {
       console.log("i'm in store methods");
       const request = {
-        title : this.title,
-        content : this.content,
-      }
+        title: this.title,
+        content: this.content,
+      };
       axios
-        .post(`http://localhost/api/progress/${this.$route.params.id}/store`,request)
+        .post(
+          `http://localhost/api/progress/${this.$route.params.id}/store`,
+          request
+        )
         .then((res) => {
           this.$router.push(`/progress/${this.$route.params.id}`);
         })

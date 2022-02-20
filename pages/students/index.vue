@@ -1,13 +1,12 @@
 <template>
   <div>
-    <Header @detailClick="filterOpen()" @csvClick="csv()" />
-    <Detail ref="detail" @searchClick="search()" />
+    <Header @detailClick="filterOpen()" @csvClick="csv()" @searched-students="searchedStudents($event, students)"/>
+    <Detail ref="detail"  @filtered-students="filteredStudents($event, students)" />
     <List ref="list" />
   </div>
 </template>
 
 <script>
-import axios from "axios";
 import Header from "~/components/students/header";
 import List from "~/components/students/list";
 import Detail from "~/components/students/filter";
@@ -31,10 +30,15 @@ export default {
       this.$refs.detail.showFilter();
     },
     csv() {
-      this.$refs.detail.csv();
+      this.$refs.detail.csvOpen();
     },
-    search(){
-      this.$refs.list.search();
+    searchedStudents(students){
+      this.students = students
+      this.$refs.list.searchClick(this.students);
+    },
+    filteredStudents(students){
+      this.students = students
+      this.$refs.list.filterClick(this.students);
     }
   },
 };

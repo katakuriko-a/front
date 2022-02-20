@@ -31,18 +31,21 @@
           >
           <input type="radio" v-model="plan" value="PREMIUM" />PREMIUM
         </div>
-        <button @click="search()" class="filter_btn btn_option">検索</button>
+        <button @click="searchClick()" class="filter_btn btn_option">
+          検索
+        </button>
       </form>
     </div>
     <div :class="{ popup: popup }" class="csv-downloader">
-      <form method="get" action="">
+      <form @submit.prevent method="get" action="">
         <div @click="backClick()" class="back btn_option">←</div>
         <div class="input_filename">
-          <input type="text" name="filename" placeholder="ファイル名" /><span
+          <input type="text" v-model="filename" placeholder="ファイル名" /><span
             >.csv</span
           >
         </div>
         <input
+          @click="csv()"
           class="btn_option"
           type="submit"
           value="csv形式でファイルをダウンロード"
@@ -52,6 +55,7 @@
   </div>
 </template>
 <script>
+import axios from "axios";
 export default {
   data() {
     return {
@@ -64,6 +68,7 @@ export default {
       mail: "",
       tel: "",
       plan: "",
+      filename: "",
     };
   },
   methods: {
@@ -82,12 +87,56 @@ export default {
       this.show = false;
       this.popup = false;
     },
-    csv() {
+    csvOpen() {
       this.popup = !this.popup;
       this.show = !this.show;
     },
-    search() {
-      this.$emit("searchClick");
+    csv() {
+      axios
+        .get("http://localhost/api/csv", {
+          responseType: "blob",
+        })
+        .then((res) => {
+          const url = URL.createObjectURL(new Blob([res.data]));
+          const link = document.createElement("a");
+          link.href = url;
+          link.setAttribute("download", `${this.filename}.csv`); //ここらへんは適当に設定する
+          document.body.appendChild(link);
+          link.click();
+
+          this.popup = !this.popup;
+          this.show = !this.show;
+        })
+        .catch((error) => {
+          console.log(error);
+          this.result = "ERROR";
+        });
+    },
+
+    searchClick() {
+      axios
+        .get("http://localhost/api", {
+          params: {
+            name: this.name,
+            age: this.age,
+            birth: this.birth,
+            mail: this.mail,
+            tel: this.tel,
+            plan: this.plan,
+          },
+        })
+        .then((res) => {
+          this.students = res.data;
+          console.log(this.students);
+          this.$emit("filtered-students", this.students);
+          this.open = false;
+          this.show = false;
+          this.popup = false;
+        })
+        .catch((error) => {
+          console.log(error);
+          this.result = "ERROR";
+        });
     },
   },
 };

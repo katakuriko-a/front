@@ -13,7 +13,7 @@
               <th>TEL</th>
               <th>プラン名</th>
             </tr>
-            <tr v-for="student in students" :key="student.name">
+            <tr v-for="student in students" :key="student.id">
               <td>{{ student.name }}</td>
               <td>{{ student.age }}</td>
               <td>{{ student.birth }}</td>
@@ -39,12 +39,17 @@
             </tr>
           </tbody>
         </table>
+        <div v-if="isStudents" class="alert alert-danger" role="alert">
+          データが見つかりませんでした。
+        </div>
       </div>
     </div>
     <div class="pagers">
       <a href="#"><div class="pager active btn_option">1</div></a>
       <a href="#"><div class="pager btn_option">2</div></a>
-      <a href="#" class="next"> <fa class="fas fa-home" :icon="['fas', 'angle-right']" /></a>
+      <a href="#" class="next">
+        <fa class="fas fa-home" :icon="['fas', 'angle-right']"
+      /></a>
     </div>
     {{ doubleCount }}
   </div>
@@ -57,12 +62,13 @@ export default {
   data() {
     return {
       students: [],
+      isStudents: false,
     };
   },
-  computed:{
-    doubleCount(){
+  computed: {
+    doubleCount() {
       return this.$store.getters.doubleCount;
-    }
+    },
   },
   mounted() {
     axios
@@ -75,6 +81,7 @@ export default {
         this.result = "ERROR";
       });
   },
+
   methods: {
     destroy(id) {
       axios
@@ -86,24 +93,22 @@ export default {
           console.log(error);
         });
     },
-    search() {
-      const request = {
-        name: this.name,
-        age: this.age,
-        birth: this.birth,
-        mail: this.mail,
-        tel: this.tel,
-        plan: this.plan,
-      };
-      axios
-        .get("http://localhost/api", request)
-        .then((res) => {
-          console.log("search!!!!");
-          this.students = res.data;
-        })
-        .catch((error) => {
-          console.log(error);
-        });
+    searchClick(props) {
+      this.students = props;
+      if (this.students.length == 0) {
+        this.isStudents = true;
+      } else {
+        this.isStudents = false;
+      }
+    },
+    filterClick(props) {
+      this.students = props;
+      console.log(this.students);
+      if (this.students.length == 0) {
+        this.isStudents = true;
+      } else {
+        this.isStudents = false;
+      }
     },
   },
 };
