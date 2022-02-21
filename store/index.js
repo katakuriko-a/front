@@ -3,9 +3,9 @@ import axios from "axios";
 export const state = () => ({
   students: [],
   isStudents: false, //データが存在するかどうか
-  isOpen: false,
-  isShow: false,
-  isPopup: false,
+  isOpen: false, //詳細検索
+  isShow: false, //グレー背景
+  isPopup: false, //csvポップアップ
 });
 
 export const mutations = {
@@ -16,6 +16,11 @@ export const mutations = {
     } else {
       state.isStudents = false;
     }
+  },
+
+  //生徒の新規追加
+  newStudent(state, student) {
+    state.students.push(student);
   },
 
   setFilter(state) {
@@ -41,6 +46,20 @@ export const actions = {
     commit("setStudents", res.data);
   },
 
+  async addStudent({ commit }, { name, age, birth, mail, tel, plan }) {
+    const param = {
+      name: name,
+      age: age,
+      birth: birth,
+      mail: mail,
+      tel: tel,
+      plan: plan,
+    };
+    const res = await axios.post("http://localhost/api/store", param);
+    commit("newStudent", res.data);
+    this.$router.push("/students");
+  },
+
   async searchStudents({ commit }, search) {
     const res = await axios.get("http://localhost/api", {
       params: {
@@ -49,8 +68,6 @@ export const actions = {
     });
     commit("setStudents", res.data);
   },
-
-  
 
   async deleteStudents({ commit }, id) {
     const res = await axios
@@ -89,6 +106,7 @@ export const actions = {
       },
     });
     commit("setStudents", res.data);
+    commit("setClose");
     console.log(res.data);
   },
 

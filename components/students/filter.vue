@@ -83,9 +83,6 @@ export default {
         tel: this.tel,
         plan: this.plan,
       });
-      this.open = false;
-      this.show = false;
-      this.popup = false;
     },
   },
 };

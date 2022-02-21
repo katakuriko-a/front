@@ -39,7 +39,7 @@
             </tr>
           </tbody>
         </table>
-        <v-alert dismissible dense type="warning" v-if="isStudents">
+        <v-alert text dense type="warning" v-if="isStudents">
           データが見つかりませんでした
         </v-alert>
       </div>

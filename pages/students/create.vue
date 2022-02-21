@@ -60,12 +60,7 @@
         </div>
         <div class="form_group form_plan">
           <label for="plan">プラン名</label>
-          <select
-            class="form_parts"
-            id="plan"
-            v-model="plan"
-            onchange="changeColor(this)"
-          >
+          <select class="form_parts" id="plan" v-model="plan">
             <option value="">---</option>
             <option>PREMIUM</option>
             <option>STANDARD</option>
@@ -80,7 +75,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import { mapActions } from "vuex";
 
 export default {
   head() {
@@ -100,24 +95,16 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["addStudent"]),
     store() {
-      const request = {
+      this.$store.dispatch("addStudent", {
         name: this.name,
         age: this.age,
         birth: this.birth,
         mail: this.mail,
         tel: this.tel,
         plan: this.plan,
-      };
-      axios
-        .post("http://localhost/api/store", request)
-        .then((res) => {
-          this.$router.push("/students");
-        })
-        .catch((error) => {
-          console.log(error);
-          this.result = "ERROR";
-        });
+      });
     },
   },
 };
