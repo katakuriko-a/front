@@ -39,7 +39,7 @@
           </tbody>
         </table>
         <div v-if="isPosts" class="alert alert-danger" role="alert">
-          データが見つかりませんでした。
+          投稿がまだありません。
         </div>
       </div>
     </div>

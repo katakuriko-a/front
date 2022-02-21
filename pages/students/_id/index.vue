@@ -103,7 +103,6 @@ export default {
     axios
       .get(`http://localhost/api/edit/${this.$route.params.id}`)
       .then((res) => {
-        console.log("hello from then");
         this.name = res.data.name;
         this.age = res.data.age;
         this.birth = res.data.birth;
@@ -111,10 +110,6 @@ export default {
         this.tel = res.data.tel;
         this.plan = res.data.plan;
       })
-      .catch((error) => {
-        console.log(error);
-        this.result = "ERROR";
-      });
   },
   methods: {
     update() {
