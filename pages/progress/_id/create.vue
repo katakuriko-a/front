@@ -33,7 +33,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import { mapActions } from "vuex";
 
 export default {
   head() {
@@ -49,24 +49,13 @@ export default {
     };
   },
   methods: {
+    ...mapActions(["addProgress"]),
     store() {
-      console.log("i'm in store methods");
-      const request = {
+      this.$store.dispatch("addProgress", {
+        id: this.$route.params.id,
         title: this.title,
         content: this.content,
-      };
-      axios
-        .post(
-          `http://localhost/api/progress/${this.$route.params.id}/store`,
-          request
-        )
-        .then((res) => {
-          this.$router.push(`/progress/${this.$route.params.id}`);
-        })
-        .catch((error) => {
-          console.log(error);
-          this.result = "ERROR";
-        });
+      });
     },
   },
 };

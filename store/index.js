@@ -2,10 +2,14 @@ import axios from "axios";
 
 export const state = () => ({
   students: [],
+  student: {},
+  progress: [],
+  post: [],
   isStudents: false, //データが存在するかどうか
   isOpen: false, //詳細検索
   isShow: false, //グレー背景
   isPopup: false, //csvポップアップ
+  isProgress: false,
 });
 
 export const mutations = {
@@ -18,9 +22,20 @@ export const mutations = {
     }
   },
 
+  setStudent(state, student) {
+    state.student = student;
+    console.log(student);
+  },
+
   //生徒の新規追加
   newStudent(state, student) {
     state.students.push(student);
+    state.student = student;
+  },
+
+  newProgress(state, post) {
+    state.progress.push(post);
+    state.post = post;
   },
 
   setFilter(state) {
@@ -38,16 +53,83 @@ export const mutations = {
     state.isPopup = true;
     state.isShow = true;
   },
+
+  setProgress(state, progress) {
+    state.progress = progress;
+    if (progress.length == 0) {
+      state.isProgress = true;
+    } else {
+      state.isProgress = false;
+    }
+  },
+
+  setPost(state, post) {
+    state.post = post;
+    console.log(post);
+  },
 };
 
 export const actions = {
+  async getProgress({ commit }, id) {
+    const res = await axios.get(`http://localhost/api/progress/${id}`);
+    commit("setProgress", res.data);
+  },
+
+  async addProgress({ commit }, { id, title, content }) {
+    const request = {
+      title: title,
+      content: content,
+    };
+    const res = await axios.post(
+      `http://localhost/api/progress/${id}/store`,
+      request
+    );
+    commit("newProgress", res.data);
+    this.$router.push(`/progress/${id}`);
+  },
+
+  async getPost({ commit }, id) {
+    const res = await axios.get(`http://localhost/api/progress/${id}/edit`);
+    commit("setPost", res.data);
+  },
+
+  async updatePost({ commit }, { id, student_id, title, content }) {
+    const request = {
+      title: title,
+      content: content,
+    };
+    const res = await axios.post(
+      `http://localhost/api/progress/${id}/update`,
+      request
+    );
+    console.log(res.data);
+    this.$router.push(`/progress/${student_id}`);
+    commit("setPost", res.data);
+  },
+
+  async deleteProgress({ commit }, id) {
+    if (!confirm("本当に削除しますか？")) {
+      return;
+    }
+    await axios
+      .delete(`http://localhost/api/progress/${id}/destroy`)
+      .then(() => {
+        location.reload();
+      });
+  },
+
   async getStudents({ commit }) {
     const res = await axios.get("http://localhost/api");
     commit("setStudents", res.data);
   },
 
-  async addStudent({ commit }, { name, age, birth, mail, tel, plan }) {
-    const param = {
+  async getStudent({ commit }, id) {
+    const res = await axios.get(`http://localhost/api/edit/${id}`);
+    commit("setStudent", res.data);
+  },
+
+  async updateStudent({ commit }, { id, name, age, birth, mail, tel, plan }) {
+    const request = {
       name: name,
       age: age,
       birth: birth,
@@ -55,7 +137,21 @@ export const actions = {
       tel: tel,
       plan: plan,
     };
-    const res = await axios.post("http://localhost/api/store", param);
+    const res = await axios.post(`http://localhost/api/update/${id}`, request);
+    console.log(res.data);
+    this.$router.push("/students");
+  },
+
+  async addStudent({ commit }, { name, age, birth, mail, tel, plan }) {
+    const request = {
+      name: name,
+      age: age,
+      birth: birth,
+      mail: mail,
+      tel: tel,
+      plan: plan,
+    };
+    const res = await axios.post("http://localhost/api/store", request);
     commit("newStudent", res.data);
     this.$router.push("/students");
   },
@@ -70,12 +166,14 @@ export const actions = {
   },
 
   async deleteStudents({ commit }, id) {
-    const res = await axios
+    if (!confirm("本当に削除しますか？")) {
+      return;
+    }
+    await axios
       .delete(`http://localhost/api/destroy/${id}`)
       .then(() => {
         location.reload();
       });
-    commit("setStudents", res.data);
   },
 
   async getCsv({ commit }, filename) {

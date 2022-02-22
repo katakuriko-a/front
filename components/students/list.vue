@@ -3,7 +3,7 @@
     <div class="main_wrapper">
       <p class="sum_number">15件</p>
       <div class="main_content">
-        <table>
+        <table class="students_table">
           <tbody>
             <tr>
               <th>名前</th>

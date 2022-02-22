@@ -9,9 +9,8 @@
             class="form_parts"
             id="name"
             type="text"
-            v-model="name"
             placeholder="阿部 隆"
-            value=""
+            v-model="name"
           />
         </div>
         <div class="form_group form_age">
@@ -60,12 +59,7 @@
         </div>
         <div class="form_group form_plan">
           <label for="plan">プラン名</label>
-          <select
-            class="form_parts"
-            id="plan"
-            v-model="plan"
-            onchange="changeColor(this)"
-          >
+          <select class="form_parts" id="plan" v-model="plan">
             <option value="">---</option>
             <option>PREMIUM</option>
             <option>STANDARD</option>
@@ -80,10 +74,10 @@
 </template>
 
 <script>
-import axios from "axios";
+import { mapActions, mapState } from "vuex";
 
 export default {
-    head() {
+  head() {
     return {
       // nuxt.config.jsの%sに反映される内容
       title: "登録内容編集画面",
@@ -99,37 +93,32 @@ export default {
       plan: "",
     };
   },
-  mounted() {
-    axios
-      .get(`http://localhost/api/edit/${this.$route.params.id}`)
-      .then((res) => {
-        this.name = res.data.name;
-        this.age = res.data.age;
-        this.birth = res.data.birth;
-        this.mail = res.data.mail;
-        this.tel = res.data.tel;
-        this.plan = res.data.plan;
-      })
+  computed: {
+    ...mapState(["student"]),
   },
+  mounted() {
+    this.getStudent(this.$route.params.id).then(() => {
+      this.name = this.student.name;
+      this.age = this.student.age;
+      this.birth = this.student.birth;
+      this.mail = this.student.mail;
+      this.tel = this.student.tel;
+      this.plan = this.student.plan;
+    });
+  },
+
   methods: {
+    ...mapActions(["getStudent", "updateStudent"]),
     update() {
-      const request = {
+      this.$store.dispatch("updateStudent", {
+        id: this.$route.params.id,
         name: this.name,
         age: this.age,
         birth: this.birth,
         mail: this.mail,
         tel: this.tel,
         plan: this.plan,
-      };
-      axios
-        .post(`http://localhost/api/update/${this.$route.params.id}`, request)
-        .then((res) => {
-          this.$router.push("/students");
-        })
-        .catch((error) => {
-          console.log(error);
-          this.result = "ERROR";
-        });
+      });
     },
   },
 };

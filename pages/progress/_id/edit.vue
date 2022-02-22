@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import { mapActions, mapState } from "vuex";
 
 export default {
   head() {
@@ -43,45 +43,31 @@ export default {
       title: "進捗報告編集画面",
     };
   },
+  computed: {
+    ...mapState(["post"]),
+  },
   data() {
     return {
       title: "",
       content: "",
-      student_id: "",
+
     };
   },
   mounted() {
-    axios
-      .get(`http://localhost/api/progress/${this.$route.params.id}/edit`)
-      .then((res) => {
-        console.log(res);
-        this.title = res.data.title;
-        this.content = res.data.content;
-        this.student_id = res.data.student_id;
-      })
-      .catch((error) => {
-        console.log(error);
-        this.result = "ERROR";
-      });
+    this.getPost(this.$route.params.id).then(() => {
+      this.title = this.post.title;
+      this.content = this.post.content;
+    });
   },
   methods: {
+    ...mapActions(["getPost", "updatePost"]),
     update() {
-      const request = {
+      this.$store.dispatch("updatePost", {
+        id: this.$route.params.id,
+        student_id: this.post.student_id,
         title: this.title,
         content: this.content,
-      };
-      axios
-        .post(
-          `http://localhost/api/progress/${this.$route.params.id}/update`,
-          request
-        )
-        .then((res) => {
-          this.$router.push(`/progress/${this.student_id}`);
-        })
-        .catch((error) => {
-          console.log(error);
-          this.result = "ERROR";
-        });
+      });
     },
   },
 };

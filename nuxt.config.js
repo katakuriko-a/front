@@ -2,7 +2,7 @@ export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   head: {
     title: "ESA ACADEMY 生徒管理システム",
-    titleTemplate: '%s | ESA ACADEMY 生徒管理システム',
+    titleTemplate: "%s | ESA ACADEMY 生徒管理システム",
     htmlAttrs: {
       lang: "ja",
     },
@@ -25,7 +25,7 @@ export default {
   components: true,
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
-  buildModules: ['@nuxtjs/vuetify',],
+  buildModules: ["@nuxtjs/vuetify", "@nuxtjs/date-fns"],
 
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: ["@nuxtjs/axios", "nuxt-fontawesome"],
@@ -35,7 +35,7 @@ export default {
     imports: [
       {
         set: "@fortawesome/free-solid-svg-icons", // Solidアイコン
-        icons: ["faHome", "faPlus", "faAngleRight","faSearch"],
+        icons: ["faHome", "faPlus", "faAngleRight", "faSearch"],
       },
     ],
   },
