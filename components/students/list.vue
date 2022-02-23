@@ -3,8 +3,8 @@
     <div class="main_wrapper">
       <p class="sum_number">15件</p>
       <div class="main_content">
-        <table class="students_table">
-          <tbody>
+        <v-simple-table class="students_table" >
+          <thead>
             <tr>
               <th>名前</th>
               <th>年齢</th>
@@ -13,6 +13,8 @@
               <th>TEL</th>
               <th>プラン名</th>
             </tr>
+          </thead>
+          <tbody>
             <tr v-for="student in students" :key="student.id">
               <td>{{ student.name }}</td>
               <td>{{ student.age }}</td>
@@ -38,7 +40,7 @@
               </td>
             </tr>
           </tbody>
-        </table>
+        </v-simple-table>
         <v-alert text dense type="warning" v-if="isStudents">
           データが見つかりませんでした
         </v-alert>

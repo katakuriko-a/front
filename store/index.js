@@ -84,7 +84,6 @@ export const actions = {
       `http://localhost/api/progress/${id}/store`,
       request
     );
-    commit("newProgress", res.data);
     this.$router.push(`/progress/${id}`);
   },
 

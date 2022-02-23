@@ -9,16 +9,20 @@
       <div class="main_wrapper">
         <div class="main_content signup_content">
           <h2>進捗報告</h2>
-          <table>
-            <tbody>
+          <v-simple-table>
+            <thead>
               <tr>
-                <th >投稿日時</th>
-                <th>タイトル</th>
+                <th>投稿日</th>
+                <th class="th_title">タイトル</th>
                 <th>本文</th>
               </tr>
+            </thead>
 
+            <tbody>
               <tr v-for="post in progress" :key="post.title">
-                <td class="td_date">{{$dateFns.format(new Date(post.created_at), 'yyyy/MM/dd')}}</td>
+                <td class="td_date">
+                  {{ $dateFns.format(new Date(post.created_at), "yyyy/MM/dd") }}
+                </td>
                 <td>{{ post.title }}</td>
                 <td>{{ post.content }}</td>
                 <td>
@@ -40,7 +44,7 @@
                 </td>
               </tr>
             </tbody>
-          </table>
+          </v-simple-table>
           <v-alert text dense type="warning" v-if="isProgress">
             投稿がまだありません。
           </v-alert>
@@ -51,7 +55,7 @@
 </template>
 
 <script>
-import {mapState, mapActions} from "vuex";
+import { mapState, mapActions } from "vuex";
 
 export default {
   head() {
@@ -73,7 +77,7 @@ export default {
     this.getProgress(this.$route.params.id);
   },
   methods: {
-        ...mapActions(["getProgress","deleteProgress"]),
+    ...mapActions(["getProgress", "deleteProgress"]),
   },
 };
 </script>

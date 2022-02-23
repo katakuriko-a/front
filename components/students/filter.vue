@@ -37,20 +37,23 @@
       </form>
     </div>
     <div :class="{ popup: isPopup }" class="csv-downloader">
-      <form @submit.prevent method="get" action="">
+      <v-form ref="form" @submit.prevent>
         <div @click="close()" class="back btn_option">←</div>
         <div class="input_filename">
-          <input type="text" v-model="filename" placeholder="ファイル名" /><span
-            >.csv</span
-          >
+          <v-text-field
+            type="text"
+            v-model="filename"
+            placeholder="ファイル名"
+            :rules="[rules.required]"
+          /><span>.csv</span>
         </div>
         <input
-          @click="getCsv(filename)"
+          @click="csvClick(filename)"
           class="btn_option"
           type="submit"
           value="csv形式でファイルをダウンロード"
         />
-      </form>
+      </v-form>
     </div>
   </div>
 </template>
@@ -66,6 +69,9 @@ export default {
       tel: "",
       plan: "",
       filename: "",
+      rules: {
+        required: (value) => !!value || "必須項目です。",
+      },
     };
   },
   computed: {
@@ -83,6 +89,12 @@ export default {
         tel: this.tel,
         plan: this.plan,
       });
+    },
+
+    csvClick() {
+      if (this.$refs.form.validate()) {
+        this.getCsv(this.filename);
+      }
     },
   },
 };
