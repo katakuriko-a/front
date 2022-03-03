@@ -1,43 +1,60 @@
 <template>
   <v-app>
-    <div class="new_wrapper">
-      <div class="main_content signup_content">
+    <div @click="close()" class="cover" :class="{ show: isShow }"></div>
+    <v-app-bar :dark="isTheme">
+      <v-app-bar-nav-icon @click="drawer()"></v-app-bar-nav-icon>
+    </v-app-bar>
+    <Theme />
+    <v-main class="new_wrapper">
+      <v-card :dark="isTheme" class="main_content">
         <h2>新規投稿を作成</h2>
         <!-- {{-- ここからフォーム --}} -->
         <v-form ref="form" @submit.prevent>
-          <div class="form_group form_title">
-            <label for="title">タイトル</label>
-            <v-text-field
-              class="form_parts"
-              id="title"
-              type="text"
-              v-model="title"
-              placeholder="タイトルを入力してください"
-              :rules="[rules.required]"
-            />
-          </div>
-          <div class="form_group form_content">
-            <label for="content">投稿内容</label>
-            <v-textarea
-              class="form_parts"
-              v-model="content"
-              placeholder="投稿内容を入力してください"
-              :rules="[rules.required]"
-            ></v-textarea>
-          </div>
-          <button @click="store()" class="signup_btn btn_option">
-            <i class="fas fa-plus big_plus"></i>新規登録
-          </button>
+          <v-row>
+            <v-col cols="4">
+              <v-text-field
+                v-model="title"
+                filled
+                rounded
+                dense
+                label="タイトル"
+                placeholder="タイトルを入力してください"
+                :rules="[rules.required]"
+              />
+            </v-col>
+            <v-col cols="12">
+              <v-textarea
+                v-model="content"
+                filled
+                rounded
+                dense
+                label="投稿内容"
+                placeholder="本文を入力してください"
+                :rules="[rules.required]"
+              ></v-textarea>
+            </v-col>
+            <v-col cols="5"></v-col>
+            <v-col cols="4">
+              <v-btn color="cyan" rounded type="submit" @click="store()">
+                <v-icon>mdi-plus</v-icon>新規投稿
+              </v-btn>
+            </v-col>
+          </v-row>
         </v-form>
-      </div>
-    </div>
+      </v-card>
+    </v-main>
   </v-app>
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
+
+import Theme from "~/components/students/theme";
 
 export default {
+  components: {
+    Theme,
+  },
   head() {
     return {
       // nuxt.config.jsの%sに反映される内容
@@ -53,8 +70,11 @@ export default {
       },
     };
   },
+  computed: {
+    ...mapState(["isShow", "isTheme"]),
+  },
   methods: {
-    ...mapActions(["addProgress"]),
+    ...mapActions(["addProgress", "close", "drawer"]),
     store() {
       if (this.$refs.form.validate()) {
         this.$store.dispatch("addProgress", {

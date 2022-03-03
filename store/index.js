@@ -6,10 +6,14 @@ export const state = () => ({
   progress: [],
   post: [],
   isStudents: false, //データが存在するかどうか
-  isOpen: false, //詳細検索
+  isOpen: null, //詳細検索
   isShow: false, //グレー背景
   isPopup: false, //csvポップアップ
   isProgress: false,
+  isDrawer: false,
+  isTheme: false,
+  //認証機能関連state
+  user: null,
 });
 
 export const mutations = {
@@ -24,7 +28,6 @@ export const mutations = {
 
   setStudent(state, student) {
     state.student = student;
-    console.log(student);
   },
 
   //生徒の新規追加
@@ -47,6 +50,7 @@ export const mutations = {
     state.isOpen = false;
     state.isShow = false;
     state.isPopup = false;
+    state.isDrawer = false;
   },
 
   setCsv(state) {
@@ -66,6 +70,21 @@ export const mutations = {
   setPost(state, post) {
     state.post = post;
     console.log(post);
+  },
+  setDrawer(state) {
+    state.isDrawer = !state.isDrawer;
+    state.isShow = !state.isShow;
+  },
+  setTheme(state) {
+    state.isTheme = !state.isTheme;
+  },
+  falseTheme(state) {
+    state.isTheme = false;
+  },
+
+  //認証機能関連mutation
+  setUser(state, user) {
+    state.user = user;
   },
 };
 
@@ -168,11 +187,9 @@ export const actions = {
     if (!confirm("本当に削除しますか？")) {
       return;
     }
-    await axios
-      .delete(`http://localhost/api/destroy/${id}`)
-      .then(() => {
-        location.reload();
-      });
+    await axios.delete(`http://localhost/api/destroy/${id}`).then(() => {
+      location.reload();
+    });
   },
 
   async getCsv({ commit }, filename) {
@@ -211,6 +228,10 @@ export const actions = {
     commit("setCsv");
   },
 
+  drawer({ commit }) {
+    commit("setDrawer");
+  },
+
   toggleFilter({ commit }) {
     commit("setFilter");
   },
@@ -218,4 +239,55 @@ export const actions = {
   close({ commit }) {
     commit("setClose");
   },
+  theme({ commit }) {
+    commit("setTheme");
+  },
+
+  //認証機能関連action
+  login(state, info) {
+    const { password, email } = info;
+    state.commit("setUser", {
+      password,
+      email,
+    });
+  },
+  async onAuthStateChangedAction(state, { authUser, claims }) {
+    if (!authUser) {
+      // authされていない場合
+      state.commit("setUser", null);
+      // リダイレクトの設定
+      this.$router.push({
+        path: "/auth",
+      });
+    } else {
+      // authされている場合
+      const { uid, email } = authUser;
+      state.commit("setUser", {
+        uid,
+        email,
+      });
+    }
+  },
+  logout(state) {
+    state.commit("setUser", null);
+    state.commit("falseTheme");
+    $nuxt.$fire.auth.signOut().then(() => {
+      $nuxt.$router.push("/auth");
+    });
+  },
+};
+const getters = {
+  getUser(state) {
+    return state.user;
+  },
+  isAuthenticated(state) {
+    return !!state.user;
+  },
+};
+
+export default {
+  state,
+  mutations,
+  actions,
+  getters,
 };

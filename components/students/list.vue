@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <v-main >
     <div class="main_wrapper">
-      <p class="sum_number">15件</p>
-      <div class="main_content">
-        <v-simple-table class="students_table" >
+      <p class="sum_number">{{students.length}}件</p>
+      <v-card :dark="isTheme" class="main_content" >
+        <v-simple-table :dark="isTheme" class="students_table">
           <thead>
             <tr>
               <th>名前</th>
@@ -25,17 +25,18 @@
               <td>
                 <div class="btn_group">
                   <NuxtLink :to="'/progress/' + student.id">
-                    <div class="progress_btn btn btn_option">進捗報告</div>
+                    <v-btn>
+                      <v-icon>mdi-comment-outline</v-icon>
+                    </v-btn>
                   </NuxtLink>
                   <NuxtLink :to="'/students/' + student.id">
-                    <div class="edit_btn btn btn_option">編集</div>
+                    <v-btn class="btn">
+                      <v-icon>mdi-pencil-outline</v-icon>
+                    </v-btn>
                   </NuxtLink>
-                  <div
-                    @click="deleteStudents(student.id)"
-                    class="delete_btn btn btn_option btn_option"
-                  >
-                    削除
-                  </div>
+                  <v-btn class="btn" @click="deleteStudents(student.id)">
+                    <v-icon> mdi-delete-outline </v-icon>
+                  </v-btn>
                 </div>
               </td>
             </tr>
@@ -44,31 +45,39 @@
         <v-alert text dense type="warning" v-if="isStudents">
           データが見つかりませんでした
         </v-alert>
-      </div>
+      </v-card>
     </div>
-    <div class="pagers">
-      <a href="#"><div class="pager active btn_option">1</div></a>
-      <a href="#"><div class="pager btn_option">2</div></a>
-      <a href="#" class="next">
-        <fa class="fas fa-home" :icon="['fas', 'angle-right']"
-      /></a>
+    <div class="text-center">
+      <v-pagination
+        v-model="page"
+        :length="4"
+        :dark="isTheme"
+        color="#7ac8e4"
+      ></v-pagination>
     </div>
-  </div>
+  </v-main>
 </template>
 
 <script>
 import { mapActions, mapState } from "vuex";
 
 export default {
+  data() {
+    return {
+      page: 1,
+    };
+  },
+  
   mounted() {
     this.getStudents();
+    this.close();
   },
   computed: {
-    ...mapState(["students", "isStudents"]),
+    ...mapState(["students", "isStudents", "isTheme"]),
   },
 
   methods: {
-    ...mapActions(["getStudents", "deleteStudents"]),
+    ...mapActions(["getStudents", "deleteStudents", "close"]),
   },
 };
 </script>

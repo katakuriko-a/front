@@ -1,87 +1,101 @@
 <template>
-<v-app>
-  <div class="new_wrapper">
-    <div class="main_content signup_content">
-      <h2>新規登録画面</h2>
-      <v-form lazy-validation ref="form" @submit.prevent>
-        <div class="form_group form_name">
-          <label for="name">名前</label>
-          <v-text-field
-            class="form_parts"
-            id="name"
-            type="text"
-            v-model="name"
-            placeholder="阿部 隆"
-            :rules="[rules.required]"
-          />
-        </div>
-        <div class="form_group form_age">
-          <label for="age">年齢</label>
-          <v-text-field
-            class="form_parts"
-            id="age"
-            v-model="age"
-            type="text"
-            placeholder="21"
-            :rules="[rules.required]"
-          />
-        </div>
-        <div class="form_group form_birth">
-          <label for="birth">生年月日</label>
-          <v-text-field
-            class="form_parts"
-            id="birth"
-            v-model="birth"
-            type="text"
-            placeholder="2000/6/21"
-            :rules="[rules.required]"
-          />
-        </div>
-        <div class="form_group form_mail">
-          <label for="mail">e-mail</label>
-          <v-text-field
-            class="form_parts"
-            id="mail"
-            v-model="mail"
-            type="email"
-            placeholder="abe-takashi0622@email.com"
-            :rules="[rules.required, rules.email]"
-            required
-          />
-        </div>
-        <div class="form_group form_tel">
-          <label for="tel">TEL</label>
-          <v-text-field
-            class="form_parts"
-            id="tel"
-            v-model="tel"
-            type="tel"
-            placeholder="080-1234-5678"
-           :rules="[rules.required]"
-          />
-        </div>
-        <div class="form_group form_plan">
-          <label for="plan">プラン</label>
-          <v-select
-            class="form_parts"
-            v-model="plan"
-            :items="plans"
-            :rules="[rules.required]"
-            placeholder="---"
-          >
-          </v-select>
-        </div>
-        <button @click="store()" class="signup_btn btn_option">
-          <i class="fas fa-plus big_plus"></i>新規登録
-        </button>
-      </v-form>
-    </div>
-  </div>
+  <v-app>
+    <div @click="close()" class="cover" :class="{ show: isShow }"></div>
+    <v-app-bar  dark>
+      <v-app-bar-nav-icon  @click="drawer()"></v-app-bar-nav-icon>
+    </v-app-bar>
+    <v-main class="new_wrapper">
+      <v-card dark class="main_content">
+        <h2>新規登録画面</h2>
+        <v-list-item>
+          <v-form lazy-validation ref="form" @submit.prevent>
+            <v-row>
+              <v-col cols="5">
+                <v-text-field
+                  v-model="name"
+                  filled
+                  rounded
+                  dense
+                  label="名前"
+                  placeholder="阿部 隆"
+                  :rules="[rules.required]"
+                />
+              </v-col>
+              <v-col cols="2">
+                <v-text-field
+                  v-model="age"
+                  filled
+                  rounded
+                  dense
+                  label="年齢"
+                  placeholder="21"
+                  :rules="[rules.required]"
+                />
+              </v-col>
+              <v-col cols="5">
+                <v-text-field
+                  v-model="birth"
+                  filled
+                  rounded
+                  dense
+                  label="生年月日"
+                  placeholder="2000/6/21"
+                  :rules="[rules.required]"
+                />
+              </v-col>
+              <v-col cols="12">
+                <v-text-field
+                  v-model="mail"
+                  filled
+                  rounded
+                  dense
+                  label="メールアドレス"
+                  placeholder="abe-takashi0622@email.com"
+                  :rules="[rules.required, rules.email]"
+                />
+              </v-col>
+              <v-col cols="6">
+                <v-text-field
+                  v-model="tel"
+                  filled
+                  rounded
+                  dense
+                  label="電話番号"
+                  placeholder="080-1234-5678"
+                  :rules="[rules.required]"
+                />
+              </v-col>
+              <v-col cols="6">
+                <v-select
+                  :items="plans"
+                  filled
+                  label="プラン"
+                  dense
+                  rounded
+                  v-model="plan"
+                  :rules="[rules.required]"
+                  placeholder="---"
+                ></v-select>
+              </v-col>
+            </v-row>
+            <v-btn
+              color="cyan"
+              rounded
+              type="submit"
+              @click="store()"
+              class="signup_btn"
+            >
+              <v-icon>mdi-plus</v-icon>新規登録
+            </v-btn>
+          </v-form>
+        </v-list-item>
+      </v-card>
+    </v-main>
   </v-app>
 </template>
 
 <script>
-import { mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
 
 export default {
   head() {
@@ -90,22 +104,28 @@ export default {
       title: "新規登録画面",
     };
   },
-  data:() => ({
-      name: "",
-      age: "",
-      birth: "",
-      mail: "",
-      tel: "",
-      plan: "",
-      plans:["PREMIUM","STANDARD"],
-      rules: {
-        required: (value) => !!value || "必須項目です。",
-        email: (value) =>
-          /.+@.+/.test(value) || "メールアドレスの形式が正しくありません",
-      },
+  data: () => ({
+    name: "",
+    age: "",
+    birth: "",
+    mail: "",
+    tel: "",
+    plan: "",
+    plans: ["PREMIUM", "STANDARD"],
+    rules: {
+      required: (value) => !!value || "必須項目です。",
+      email: (value) =>
+        /.+@.+/.test(value) || "メールアドレスの形式が正しくありません",
+    },
   }),
+  computed: {
+    ...mapState(["isShow"]),
+  },
+  mounted(){
+    this.close();
+  },
   methods: {
-    ...mapActions(["addStudent"]),
+    ...mapActions(["addStudent", "drawer", "close"]),
     store() {
       if (this.$refs.form.validate()) {
         this.$store.dispatch("addStudent", {
@@ -121,3 +141,12 @@ export default {
   },
 };
 </script>
+
+<style>
+.v-app-bar{
+  padding: 0;
+}
+.signup_btn{
+  margin-bottom: 24px;
+}
+</style>

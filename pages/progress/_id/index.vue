@@ -1,15 +1,21 @@
 <template>
   <v-app>
-    <div>
+    <div @click="close()" class="cover" :class="{ show: isShow }"></div>
+    <v-app-bar :dark="isTheme">
+      <v-app-bar-nav-icon @click="drawer()"></v-app-bar-nav-icon>
+      <v-spacer></v-spacer>
       <NuxtLink :to="'/progress/' + this.$route.params.id + '/create'">
-        <div class="new_posts btn_option">
-          <i class="fas fa-plus"></i><span>新規投稿</span>
-        </div>
+        <v-btn color="cyan">
+          <v-icon>mdi-plus</v-icon><span>新規投稿</span>
+        </v-btn>
       </NuxtLink>
-      <div class="main_wrapper">
+    </v-app-bar>
+    <Theme/>
+    <v-main>
+      <v-card :dark="isTheme" iv class="main_wrapper">
         <div class="main_content signup_content">
           <h2>進捗報告</h2>
-          <v-simple-table>
+          <v-simple-table :dark="isTheme" style="margin-top:12px">
             <thead>
               <tr>
                 <th>投稿日</th>
@@ -28,34 +34,30 @@
                 <td>
                   <div class="btn_group">
                     <NuxtLink :to="'/progress/' + post.id + '/edit'">
-                      <div class="edit_btn btn btn_option">編集</div>
+                      <v-btn class="btn">
+                        <v-icon>mdi-pencil-outline</v-icon>
+                      </v-btn>
                     </NuxtLink>
-                    <form
-                      @submit.prevent
-                      @click="deleteProgress(post.id)"
-                      class="destroy"
-                      method="post"
-                      action=""
-                      id="destroy"
-                    >
-                      <button class="delete_btn btn btn_option">削除</button>
-                    </form>
+                    <v-btn class="btn" @click="deleteProgress(post.id)">
+                      <v-icon> mdi-delete-outline </v-icon>
+                    </v-btn>
                   </div>
                 </td>
               </tr>
             </tbody>
           </v-simple-table>
-          <v-alert text dense type="warning" v-if="isProgress">
+          <v-alert block :dark="isTheme" dense type="warning" v-if="isProgress">
             投稿がまだありません。
           </v-alert>
         </div>
-      </div>
-    </div>
+      </v-card>
+    </v-main>
   </v-app>
 </template>
 
 <script>
 import { mapState, mapActions } from "vuex";
+import Theme from "~/components/students/theme";
 
 export default {
   head() {
@@ -71,13 +73,24 @@ export default {
     };
   },
   computed: {
-    ...mapState(["progress", "isProgress"]),
+    ...mapState(["progress", "isProgress", "isShow", "isTheme"]),
   },
   mounted() {
     this.getProgress(this.$route.params.id);
   },
   methods: {
-    ...mapActions(["getProgress", "deleteProgress"]),
+    ...mapActions(["getProgress", "deleteProgress", "close", "drawer"]),
+  },
+    components: {
+    Theme,
+
   },
 };
+
+
 </script>
+
+
+
+
+

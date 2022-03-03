@@ -18,8 +18,19 @@ export default {
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: ["~/static/css/style.css", "sanitize.css"],
 
+  env: {
+    //文字列になるように「"」で囲んでね！
+    ApiKey: "AIzaSyBkjTuwQA08PbaZ_jzgujtSF1kVpoJ1xFo",
+  },
+
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: [{ src: "~/plugins/persistedstate.js", ssr: false }],
+
+  mode: 'spa',
+
+  router: {
+    middleware: ["auth"],
+  },
 
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: true,
@@ -28,7 +39,38 @@ export default {
   buildModules: ["@nuxtjs/vuetify", "@nuxtjs/date-fns"],
 
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: ["@nuxtjs/axios", "nuxt-fontawesome"],
+  modules: [
+    "@nuxtjs/axios",
+    "nuxt-fontawesome",
+    "cookie-universal-nuxt",
+    [
+      "@nuxtjs/firebase",
+      {
+        config: {
+          apiKey: "AIzaSyBkjTuwQA08PbaZ_jzgujtSF1kVpoJ1xFo",
+          authDomain: "nuxt-auth-cb78b.firebaseapp.com",
+          projectId: "nuxt-auth-cb78b",
+          storageBucket: "nuxt-auth-cb78b.appspot.com",
+          messagingSenderId: "960156403431",
+          appId: "1:960156403431:web:f5f51506d14ef9d4c0c442",
+          measurementId: "G-RNPP6SPE3W",
+        },
+        services: {
+          auth: {
+            persistence: "none",
+            initialize: {
+              // onAuthStateChangedMutation: "ON_AUTH_STATE_CHANGED_MUTATION",
+              onAuthStateChangedAction: "onAuthStateChangedAction",
+              subscribeManually: false,
+            },
+            ssr: false, // default
+          },
+          firestore: true,
+          storage: true,
+        },
+      },
+    ],
+  ],
 
   fontawesome: {
     component: "fa",

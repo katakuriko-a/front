@@ -1,38 +1,55 @@
 <template>
   <v-app>
-    <div class="main_wrapper">
-      <div class="main_content signup_content">
+    <div @click="close()" class="cover" :class="{ show: isShow }"></div>
+    <v-app-bar dark>
+      <v-app-bar-nav-icon @click="drawer()"></v-app-bar-nav-icon>
+    </v-app-bar>
+    <v-main class="new_wrapper">
+      <v-card dark class="main_content">
         <h2>投稿内容を編集</h2>
         <!-- {{-- ここからフォーム --}} -->
-        <v-form ref="form" @submit.prevent method="post" action="">
-          <div class="form_group form_title">
-            <label for="title">タイトル</label>
-            <v-text-field
-              class="form_parts"
-              id="title"
-              type="text"
-              v-model="title"
-              placeholder="タイトルを入力してください"
-              :rules="[rules.required]"
-            />
-          </div>
-          <div class="form_group form_content">
-            <label for="content">投稿内容</label>
-            <v-textarea
-              class="form_parts"
-              v-model="content"
-              placeholder="投稿内容を入力してください"
-              :rules="[rules.required]"
-            >
-              本文
-            </v-textarea>
-          </div>
-          <button @click="update()" class="signup_btn btn_option">
-            <i class="fas fa-plus big_plus"></i>内容を変更する
-          </button>
-        </v-form>
-      </div>
-    </div>
+        <v-list-item>
+          <v-form ref="form" @submit.prevent method="post" action="">
+            <v-row>
+              <v-col cols="4">
+                <v-text-field
+                  v-model="title"
+                  filled
+                  rounded
+                  dense
+                  label="タイトル"
+                  placeholder="タイトルを入力してください"
+                  :rules="[rules.required]"
+                />
+              </v-col>
+              <v-col cols="12">
+                <v-textarea
+                  v-model="content"
+                  filled
+                  rounded
+                  dense
+                  label="投稿内容"
+                  placeholder="本文を入力してください"
+                  :rules="[rules.required]"
+                ></v-textarea>
+              </v-col>
+              <v-col cols="5"></v-col>
+              <v-col cols="4">
+                <v-btn
+                  dark
+                  color="cyan"
+                  rounded
+                  type="submit"
+                  @click="update()"
+                >
+                  <v-icon>mdi-autorenew</v-icon>内容を変更する
+                </v-btn>
+              </v-col>
+            </v-row>
+          </v-form>
+        </v-list-item>
+      </v-card>
+    </v-main>
   </v-app>
 </template>
 
@@ -47,7 +64,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["post"]),
+    ...mapState(["post", "isShow"]),
   },
   data() {
     return {
@@ -65,7 +82,7 @@ export default {
     });
   },
   methods: {
-    ...mapActions(["getPost", "updatePost"]),
+    ...mapActions(["getPost", "updatePost", "close", "drawer"]),
     update() {
       if (this.$refs.form.validate()) {
         this.$store.dispatch("updatePost", {
