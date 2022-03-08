@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-app-bar :dark="isTheme">
+    <v-app-bar :dark="isTheme" class="header">
       <v-app-bar-nav-icon @click="drawer()"></v-app-bar-nav-icon>
 
       <v-btn
@@ -28,18 +28,26 @@
       >
       <v-btn class="logout" @click="logout()">ログアウト</v-btn>
     </v-app-bar>
+    <CurrentUser/>
   </div>
 </template>
 
 <script>
 import { mapActions, mapState } from "vuex";
+import CurrentUser from "~/components/students/currentUser";
+
 export default {
+  components: {
+    CurrentUser,
+  },
+
   data() {
     return {
       search: "",
       main_blue: "#7ac8e4",
     };
   },
+
   computed: {
     ...mapState(["isDrawer", "isTheme"]),
   },
@@ -48,12 +56,22 @@ export default {
       this.$emit("csvClick");
     },
 
-    ...mapActions(["searchStudents", "toggleFilter", "popupOpen", "drawer", "logout"]),
+    ...mapActions([
+      "searchStudents",
+      "toggleFilter",
+      "popupOpen",
+      "drawer",
+      "logout",
+    ]),
   },
 };
 </script>
 
 <style>
+.header{
+  position: fixed;
+  z-index: 200;
+}
 .csv_btn {
   margin-left: 36px;
 }
@@ -69,7 +87,7 @@ export default {
 .v-navigation-drawer {
   z-index: 300;
 }
-.logout{
+.logout {
   margin-left: 16px;
 }
 </style>

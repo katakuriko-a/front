@@ -27,6 +27,11 @@
               <v-icon>mdi-home</v-icon>トップページ
             </v-btn>
           </NuxtLink>
+          <NuxtLink to="/teachers">
+            <v-btn class="btn_new">
+              <v-icon>mdi-human-male-board</v-icon>先生一覧　　
+            </v-btn>
+          </NuxtLink>
         </v-list-item-group>
       </v-list>
     </v-navigation-drawer>

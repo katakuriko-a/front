@@ -1,5 +1,5 @@
 <template>
-  <v-card width="12%" :dark="isTheme" absolute class="card">
+  <v-card width="12%" :dark="!isTheme" absolute class="card">
     <v-row justify="center" class="row">
       <v-icon>mdi-weather-sunny</v-icon>
       <v-switch
@@ -32,9 +32,11 @@ export default {
 </script>
 <style scoped>
 .card {
-  margin-left: auto;
-  margin-right: 24px;
-  margin-top: 24px;
+  position: fixed;
+  z-index: 200;
+  opacity: 0.8;
+  right: 24px;
+  top: 94px;
 }
 .switch {
   margin-left: 16px;

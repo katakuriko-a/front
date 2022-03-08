@@ -89,6 +89,11 @@ export default {
 
 
 </script>
+<style>
+.v-toolbar{
+  flex: none;
+}
+</style>
 
 
 

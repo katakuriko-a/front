@@ -3,9 +3,14 @@ import axios from "axios";
 export const state = () => ({
   students: [],
   student: {},
+  teachers: [],
   progress: [],
+  current_student_id:"",
+  current_student_name:"小林",
   post: [],
+  levels: [],
   isStudents: false, //データが存在するかどうか
+  isTeachers: false, //データが存在するかどうか
   isOpen: null, //詳細検索
   isShow: false, //グレー背景
   isPopup: false, //csvポップアップ
@@ -23,6 +28,14 @@ export const mutations = {
       state.isStudents = true;
     } else {
       state.isStudents = false;
+    }
+  },
+  setTeachers(state, teachers) {
+    state.teachers = teachers;
+    if (teachers.length == 0) {
+      state.isTeachers = true;
+    } else {
+      state.isTeachers = false;
     }
   },
 
@@ -86,12 +99,51 @@ export const mutations = {
   setUser(state, user) {
     state.user = user;
   },
+
+  setLevels(state, levels) {
+    state.levels = levels;
+  },
+  setCurrentStudentId(state, current_student_id){
+    state.current_student_id = current_student_id;
+    console.log(state.current_student_id);
+  },
+  setCurrentStudentName(state, current_student_name){
+    state.current_student_name = current_student_name;
+    console.log(state.current_student_name);
+  },
 };
 
 export const actions = {
+
+  async getCurrentStudentId({ commit }, mail) {
+    const res = await axios.get(`http://localhost/api/current_student`,{
+      params: {
+        mail: mail,
+      },
+    });
+    commit("setCurrentStudentId", res.data);
+    console.log(res.data);
+  },
+
+  async getCurrentStudentName({ commit, state }) {
+    const res = await axios.get(`http://localhost/api/current_student_name`,{
+      params: {
+        id: state.current_student_id,
+      },
+    });
+    commit("setCurrentStudentName", res.data);
+    console.log(res.data);
+  },
+
   async getProgress({ commit }, id) {
     const res = await axios.get(`http://localhost/api/progress/${id}`);
     commit("setProgress", res.data);
+  },
+  async getLevels({ commit }) {
+    const res = await axios.get(`http://localhost/api/level`);
+    commit("setLevels", res.data);
+    console.log("セットレベル");
+    console.log(res.data);
   },
 
   async addProgress({ commit }, { id, title, content }) {
@@ -141,12 +193,20 @@ export const actions = {
     commit("setStudents", res.data);
   },
 
+  async getTeachers({ commit }) {
+    const res = await axios.get("http://localhost/api/teachers");
+    commit("setTeachers", res.data);
+  },
+
   async getStudent({ commit }, id) {
     const res = await axios.get(`http://localhost/api/edit/${id}`);
     commit("setStudent", res.data);
   },
 
-  async updateStudent({ commit }, { id, name, age, birth, mail, tel, plan }) {
+  async updateStudent(
+    { commit },
+    { id, name, age, birth, mail, tel, plan, level }
+  ) {
     const request = {
       name: name,
       age: age,
@@ -154,13 +214,14 @@ export const actions = {
       mail: mail,
       tel: tel,
       plan: plan,
+      level: level,
     };
     const res = await axios.post(`http://localhost/api/update/${id}`, request);
     console.log(res.data);
     this.$router.push("/students");
   },
 
-  async addStudent({ commit }, { name, age, birth, mail, tel, plan }) {
+  async addStudent({ commit }, { name, age, birth, mail, tel, plan, level }) {
     const request = {
       name: name,
       age: age,
@@ -168,6 +229,7 @@ export const actions = {
       mail: mail,
       tel: tel,
       plan: plan,
+      level: level,
     };
     const res = await axios.post("http://localhost/api/store", request);
     commit("newStudent", res.data);
@@ -241,6 +303,18 @@ export const actions = {
   },
   theme({ commit }) {
     commit("setTheme");
+  },
+  // 予約関連
+  async book({ commit }, { current_student_id, teacher_id, start_time, end_time }) {
+    const request = {
+      current_student_id: current_student_id,
+      teacher_id: teacher_id,
+      start_time: start_time,
+      end_time: end_time,
+    };
+    await axios.post("http://localhost/api/book", request);
+    // commit("addBook", res.data);
+    this.$router.push("/teachers");
   },
 
   //認証機能関連action

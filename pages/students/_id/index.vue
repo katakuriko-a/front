@@ -77,6 +77,18 @@
                   placeholder="---"
                 ></v-select>
               </v-col>
+              <v-col cols="6">
+                <v-select
+                  :items="selectLevel"
+                  filled
+                  label="レベル"
+                  dense
+                  rounded
+                  v-model="level"
+                  :rules="[rules.required]"
+                  placeholder="---"
+                ></v-select>
+              </v-col>
             </v-row>
             <v-btn
               color="cyan"
@@ -112,7 +124,9 @@ export default {
       mail: "",
       tel: "",
       plan: "",
+      level: "",
       plans: ["PREMIUM", "STANDARD"],
+      selectLevel: [],
       rules: {
         required: (value) => !!value || "必須項目です。",
         email: (value) =>
@@ -121,16 +135,20 @@ export default {
     };
   },
   computed: {
-    ...mapState(["student", "isShow"]),
+    ...mapState(["student", "isShow", "levels"]),
   },
   mounted() {
     this.getStudent(this.$route.params.id).then(() => {
+      this.levels.forEach((level) => {
+        this.selectLevel.push(level.name);
+      });
       this.name = this.student.name;
       this.age = this.student.age;
       this.birth = this.student.birth;
       this.mail = this.student.mail;
       this.tel = this.student.tel;
       this.plan = this.student.plan;
+      this.level = this.selectLevel[this.student.level_id - 1];
     });
   },
 
@@ -146,6 +164,7 @@ export default {
           mail: this.mail,
           tel: this.tel,
           plan: this.plan,
+          level: this.level,
         });
       }
     },

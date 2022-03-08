@@ -64,9 +64,12 @@ export default {
       "nuxtServerInit",
       "onAuthStateChangedAction",
       "login",
+      "getCurrentStudentId"
     ]),
 
     onSubmit() {
+      this.getCurrentStudentId(this.mail);
+
       let that = this;
       if (!this.isLogin) {
         that.$fire.auth

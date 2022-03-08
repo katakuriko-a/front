@@ -1,8 +1,8 @@
 <template>
   <v-app>
     <div @click="close()" class="cover" :class="{ show: isShow }"></div>
-    <v-app-bar  dark>
-      <v-app-bar-nav-icon  @click="drawer()"></v-app-bar-nav-icon>
+    <v-app-bar class="flex0" dark>
+      <v-app-bar-nav-icon @click="drawer()"></v-app-bar-nav-icon>
     </v-app-bar>
     <v-main class="new_wrapper">
       <v-card dark class="main_content">
@@ -77,6 +77,18 @@
                   placeholder="---"
                 ></v-select>
               </v-col>
+              <v-col cols="6">
+                <v-select
+                  :items="selectLevel"
+                  filled
+                  label="レベル"
+                  dense
+                  rounded
+                  v-model="level"
+                  :rules="[rules.required]"
+                  placeholder="---"
+                ></v-select>
+              </v-col>
             </v-row>
             <v-btn
               color="cyan"
@@ -111,7 +123,9 @@ export default {
     mail: "",
     tel: "",
     plan: "",
+    level: "",
     plans: ["PREMIUM", "STANDARD"],
+    selectLevel: [],
     rules: {
       required: (value) => !!value || "必須項目です。",
       email: (value) =>
@@ -119,13 +133,18 @@ export default {
     },
   }),
   computed: {
-    ...mapState(["isShow"]),
+    ...mapState(["isShow", "levels"]),
   },
-  mounted(){
+  mounted() {
     this.close();
+    this.getLevels().then(() => {
+      this.levels.forEach((level) => {
+        this.selectLevel.push(level.name);
+      });
+    });
   },
   methods: {
-    ...mapActions(["addStudent", "drawer", "close"]),
+    ...mapActions(["addStudent", "drawer", "close", "getLevels"]),
     store() {
       if (this.$refs.form.validate()) {
         this.$store.dispatch("addStudent", {
@@ -135,6 +154,7 @@ export default {
           mail: this.mail,
           tel: this.tel,
           plan: this.plan,
+          level: this.level,
         });
       }
     },
@@ -143,10 +163,16 @@ export default {
 </script>
 
 <style>
-.v-app-bar{
+.v-app-bar {
   padding: 0;
 }
-.signup_btn{
+.signup_btn {
   margin-bottom: 24px;
+}
+.v-main {
+  height: 100vh;
+}
+.v-toolbar{
+  flex: 0;
 }
 </style>

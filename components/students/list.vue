@@ -1,6 +1,6 @@
 <template>
   <v-main >
-    <div class="main_wrapper">
+    <div class="main_wrapper" >
       <p class="sum_number">{{students.length}}件</p>
       <v-card :dark="isTheme" class="main_content" >
         <v-simple-table :dark="isTheme" class="students_table">
@@ -12,6 +12,7 @@
               <th>e-mail</th>
               <th>TEL</th>
               <th>プラン名</th>
+              <th>レベル</th>
             </tr>
           </thead>
           <tbody>
@@ -22,6 +23,31 @@
               <td>{{ student.mail }}</td>
               <td>{{ student.tel }}</td>
               <td>{{ student.plan }}</td>
+              <td v-if="student.level_id == 1">
+                <v-sheet dark class="px-2" align="center" rounded color="green lighten-1">
+                初級
+                </v-sheet>
+              </td>
+              <td v-if="student.level_id == 2">
+                <v-sheet dark class="px-2" align="center" rounded color="green darken-1">
+                初中級
+                </v-sheet>
+              </td>
+              <td v-if="student.level_id == 3">
+                <v-sheet dark class="px-2" align="center" rounded color="green darken-2">
+                中級
+                </v-sheet>
+              </td>
+              <td v-if="student.level_id == 4">
+                <v-sheet dark class="px-2" align="center" rounded color="green darken-3">
+                中上級
+                </v-sheet>
+              </td>
+              <td v-if="student.level_id == 5">
+                <v-sheet dark class="px-2" align="center" rounded color="green darken-4">
+                上級
+                </v-sheet>
+              </td>
               <td>
                 <div class="btn_group">
                   <NuxtLink :to="'/progress/' + student.id">
@@ -67,7 +93,7 @@ export default {
       page: 1,
     };
   },
-  
+
   mounted() {
     this.getStudents();
     this.close();
