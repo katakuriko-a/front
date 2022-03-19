@@ -289,9 +289,9 @@ td {
 /* td,th:first-child {
     width: 80px;
 } */
-td:first-child{
+/* td:first-child{
     padding-left: 24px;
-}
+} */
 
 th:last-child {
     margin-left:64px;
@@ -308,9 +308,9 @@ th:last-child {
 /* th:nth-of-type(5) {
     width: 4%;
 } */
-td:nth-of-type(6) {
+/* td:nth-of-type(6) {
     padding-left: 24px;
-}
+} */
 
 button {
     font-family: inherit;

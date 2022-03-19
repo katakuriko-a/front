@@ -1,10 +1,7 @@
 <template>
   <v-app>
-    <div @click="close()" class="cover" :class="{ show: isShow }"></div>
-    <v-app-bar :dark="isTheme">
-      <v-app-bar-nav-icon @click="drawer()"></v-app-bar-nav-icon>
-    </v-app-bar>
-    <Theme />
+    <Appbar />
+    <Sidebar />
     <v-main class="new_wrapper">
       <v-card :dark="isTheme" class="main_content">
         <h2>新規投稿を作成</h2>
@@ -15,7 +12,6 @@
               <v-text-field
                 v-model="title"
                 filled
-                rounded
                 dense
                 label="タイトル"
                 placeholder="タイトルを入力してください"
@@ -26,7 +22,6 @@
               <v-textarea
                 v-model="content"
                 filled
-                rounded
                 dense
                 label="投稿内容"
                 placeholder="本文を入力してください"
@@ -35,7 +30,7 @@
             </v-col>
             <v-col cols="5"></v-col>
             <v-col cols="4">
-              <v-btn color="cyan" rounded type="submit" @click="store()">
+              <v-btn color="cyan" type="submit" @click="store()">
                 <v-icon>mdi-plus</v-icon>新規投稿
               </v-btn>
             </v-col>
@@ -48,12 +43,13 @@
 
 <script>
 import { mapActions, mapState } from "vuex";
-
-import Theme from "~/components/students/theme";
+import Sidebar from "~/components/students/sidebar";
+import Appbar from '../../../components/students/appbar.vue';
 
 export default {
   components: {
-    Theme,
+    Sidebar,
+    Appbar,
   },
   head() {
     return {

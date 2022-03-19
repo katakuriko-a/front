@@ -4,9 +4,12 @@ export const state = () => ({
   students: [],
   student: {},
   teachers: [],
+  teacher: {},
+  reserved_teachers: [],
+  reserved_teacher: {},
   progress: [],
-  current_student_id:"",
-  current_student_name:"小林",
+  current_student_id: "",
+  current_student_name: "小林",
   post: [],
   levels: [],
   isStudents: false, //データが存在するかどうか
@@ -16,12 +19,23 @@ export const state = () => ({
   isPopup: false, //csvポップアップ
   isProgress: false,
   isDrawer: false,
-  isTheme: false,
+  isTheme: true,
   //認証機能関連state
   user: null,
+  page: "progress",
+  roles_id: 99,
 });
 
 export const mutations = {
+  setRolesId(state, roles) {
+    state.roles_id = roles;
+    console.log('roles_idガセットされました');
+    console.log(roles);
+  },
+  setPage(state, page) {
+    state.page = page;
+    this.$router.push(`/students/${state.current_student_id}/mypage`);
+  },
   setStudents(state, students) {
     state.students = students;
     if (students.length == 0) {
@@ -41,6 +55,17 @@ export const mutations = {
 
   setStudent(state, student) {
     state.student = student;
+  },
+  setTeacher(state, teacher) {
+    state.teacher = teacher;
+  },
+
+  setReservedTeachers(state, reservedTeachers) {
+    state.reserved_teachers = reservedTeachers;
+  },
+  setReserve(state, reserved_teacher) {
+    state.reserved_teacher = reserved_teacher;
+    console.log(reserved_teacher);
   },
 
   //生徒の新規追加
@@ -103,37 +128,32 @@ export const mutations = {
   setLevels(state, levels) {
     state.levels = levels;
   },
-  setCurrentStudentId(state, current_student_id){
+  setCurrentStudentId(state, current_student_id) {
     state.current_student_id = current_student_id;
-    console.log(state.current_student_id);
+    console.log(state.roles_id);
+    if (state.roles_id == 99) {
+      this.$router.push(`/admin`);
+    } else {
+      this.$router.push(`/mypage`);
+    }
   },
-  setCurrentStudentName(state, current_student_name){
+  setCurrentStudentName(state, current_student_name) {
     state.current_student_name = current_student_name;
     console.log(state.current_student_name);
   },
 };
 
 export const actions = {
-
   async getCurrentStudentId({ commit }, mail) {
-    const res = await axios.get(`http://localhost/api/current_student`,{
+    const res = await axios.get(`http://localhost/api/current_student`, {
       params: {
         mail: mail,
       },
     });
     commit("setCurrentStudentId", res.data);
-    console.log(res.data);
   },
 
-  async getCurrentStudentName({ commit, state }) {
-    const res = await axios.get(`http://localhost/api/current_student_name`,{
-      params: {
-        id: state.current_student_id,
-      },
-    });
-    commit("setCurrentStudentName", res.data);
-    console.log(res.data);
-  },
+
 
   async getProgress({ commit }, id) {
     const res = await axios.get(`http://localhost/api/progress/${id}`);
@@ -158,12 +178,33 @@ export const actions = {
     this.$router.push(`/progress/${id}`);
   },
 
+  async addTeacher(
+    { commit },
+    { name, age, experience_month, fee, skill, mail, tel, birth }
+  ) {
+    const request = {
+      name: name,
+      age: age,
+      birth: birth,
+      mail: mail,
+      tel: tel,
+      experience_month: experience_month,
+      fee: fee,
+      skill: skill,
+    };
+    await axios
+      .post(`http://localhost/api/teachers/store`, request)
+      .then(() => {
+        this.$router.push(`/teachers`);
+      });
+  },
+
   async getPost({ commit }, id) {
     const res = await axios.get(`http://localhost/api/progress/${id}/edit`);
     commit("setPost", res.data);
   },
 
-  async updatePost({ commit }, { id, student_id, title, content }) {
+  async updatePost({ commit }, { id, user_id, title, content }) {
     const request = {
       title: title,
       content: content,
@@ -173,7 +214,7 @@ export const actions = {
       request
     );
     console.log(res.data);
-    this.$router.push(`/progress/${student_id}`);
+    this.$router.push(`/progress/${user_id}`);
     commit("setPost", res.data);
   },
 
@@ -181,6 +222,7 @@ export const actions = {
     if (!confirm("本当に削除しますか？")) {
       return;
     }
+
     await axios
       .delete(`http://localhost/api/progress/${id}/destroy`)
       .then(() => {
@@ -201,11 +243,26 @@ export const actions = {
   async getStudent({ commit }, id) {
     const res = await axios.get(`http://localhost/api/edit/${id}`);
     commit("setStudent", res.data);
+    console.log("getStudent");
+    console.log(res);
   },
 
-  async updateStudent(
+  async getStudentWithEmail({ commit }, mail) {
+    const request = {
+      mail : mail
+    }
+    const res = await axios.post(`http://localhost/api/get/student/with_email`, request);
+    commit("setRolesId", res.data.roles_id);
+  },
+
+  async getTeacher({ commit }, id) {
+    const res = await axios.get(`http://localhost/api/reserve/${id}`);
+    commit("setTeacher", res.data);
+  },
+
+  async updateUser(
     { commit },
-    { id, name, age, birth, mail, tel, plan, level }
+    { id, name, age, birth, mail, tel, plan, skill, experience_month, fee }
   ) {
     const request = {
       name: name,
@@ -214,14 +271,30 @@ export const actions = {
       mail: mail,
       tel: tel,
       plan: plan,
-      level: level,
+      skill: skill,
+      experience_month: experience_month,
+      fee: fee,
     };
     const res = await axios.post(`http://localhost/api/update/${id}`, request);
     console.log(res.data);
-    this.$router.push("/students");
+    this.$router.push(`/mypage`);
   },
 
-  async addStudent({ commit }, { name, age, birth, mail, tel, plan, level }) {
+  async addStudent(
+    { commit },
+    {
+      name,
+      age,
+      birth,
+      mail,
+      tel,
+      plan,
+      roles_id,
+      fee,
+      experience_month,
+      skill,
+    }
+  ) {
     const request = {
       name: name,
       age: age,
@@ -229,11 +302,13 @@ export const actions = {
       mail: mail,
       tel: tel,
       plan: plan,
-      level: level,
+      roles_id: roles_id,
+      fee: fee,
+      experience_month: experience_month,
+      skill: skill,
     };
     const res = await axios.post("http://localhost/api/store", request);
     commit("newStudent", res.data);
-    this.$router.push("/students");
   },
 
   async searchStudents({ commit }, search) {
@@ -252,6 +327,31 @@ export const actions = {
     await axios.delete(`http://localhost/api/destroy/${id}`).then(() => {
       location.reload();
     });
+  },
+
+  async deleteReserve({ commit }, id) {
+    if (!confirm("本当にキャンセルしますか？")) {
+      return;
+    }
+    await axios.post(`http://localhost/api/reserve/${id}/destroy`).then(() => {
+      location.reload();
+    });
+  },
+
+  async getReserve({ commit }, { id, student_id }) {
+    console.log(id, student_id);
+    const request = {
+      student_id: student_id,
+    };
+    const res = await axios.post(
+      `http://localhost/api/reserve/${id}/edit`,
+      request
+    );
+    console.log("予約情報");
+    console.log(res.data);
+
+    commit("setReserve", res.data);
+    this.$router.push(`/reserves/${id}/edit`);
   },
 
   async getCsv({ commit }, filename) {
@@ -305,16 +405,70 @@ export const actions = {
     commit("setTheme");
   },
   // 予約関連
-  async book({ commit }, { current_student_id, teacher_id, start_time, end_time }) {
+  async reserve(
+    { commit },
+    {
+      current_student_id,
+      teacher_id,
+      start_time,
+      end_time,
+      teacher_name,
+      student_name,
+    }
+  ) {
     const request = {
       current_student_id: current_student_id,
+      teacher_name: teacher_name,
+      student_name: student_name,
       teacher_id: teacher_id,
       start_time: start_time,
       end_time: end_time,
     };
-    await axios.post("http://localhost/api/book", request);
+
+    await axios.post("http://localhost/api/reserve", request);
     // commit("addBook", res.data);
-    this.$router.push("/teachers");
+    this.$router.push("/mypage");
+  },
+
+  async updateReserve(
+    { commit },
+    {
+      reserve_id,
+      current_student_id,
+      teacher_id,
+      start_time,
+      end_time,
+      teacher_name,
+    }
+  ) {
+    const request = {
+      reserve_id: reserve_id,
+      current_student_id: current_student_id,
+      teacher_id: teacher_id,
+      start_time: start_time,
+      end_time: end_time,
+      teacher_name: teacher_name,
+    };
+
+    await axios.post("http://localhost/api/reserve/update", request);
+    // commit("addBook", res.data);
+    this.$router.push(`/mypage`);
+  },
+
+  async getReservedTeachers({ commit }, id) {
+    const res = await axios.get(`http://localhost/api/get_reserve/${id}`);
+    commit("setReservedTeachers", res.data);
+    console.log("getReserve");
+    console.log(res.data);
+  },
+
+  async getReservedStudents({ commit }, id) {
+    const res = await axios.get(
+      `http://localhost/api/get_reserve_students/${id}`
+    );
+    commit("setReservedTeachers", res.data);
+    console.log("getReserve_生徒");
+    console.log(res.data);
   },
 
   //認証機能関連action
@@ -356,6 +510,9 @@ const getters = {
   },
   isAuthenticated(state) {
     return !!state.user;
+  },
+  getRolesId(state) {
+    return state.roles_id;
   },
 };
 

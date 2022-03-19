@@ -1,8 +1,8 @@
 <template>
-  <v-main >
-    <div class="main_wrapper" >
-      <p class="sum_number">{{students.length}}件</p>
-      <v-card :dark="isTheme" class="main_content" >
+  <v-main>
+    <div class="main_wrapper">
+      <p class="sum_number">{{ students.length }}件</p>
+      <v-card :dark="isTheme" class="main_content">
         <v-simple-table :dark="isTheme" class="students_table">
           <thead>
             <tr>
@@ -24,42 +24,62 @@
               <td>{{ student.tel }}</td>
               <td>{{ student.plan }}</td>
               <td v-if="student.level_id == 1">
-                <v-sheet dark class="px-2" align="center" rounded color="green lighten-1">
-                初級
+                <v-sheet
+                  dark
+                  class="px-2"
+                  align="center"
+                  rounded
+                  color="green lighten-1"
+                >
+                  初級
                 </v-sheet>
               </td>
               <td v-if="student.level_id == 2">
-                <v-sheet dark class="px-2" align="center" rounded color="green darken-1">
-                初中級
+                <v-sheet
+                  dark
+                  class="px-2"
+                  align="center"
+                  rounded
+                  color="green darken-1"
+                >
+                  初中級
                 </v-sheet>
               </td>
               <td v-if="student.level_id == 3">
-                <v-sheet dark class="px-2" align="center" rounded color="green darken-2">
-                中級
+                <v-sheet
+                  dark
+                  class="px-2"
+                  align="center"
+                  rounded
+                  color="green darken-2"
+                >
+                  中級
                 </v-sheet>
               </td>
               <td v-if="student.level_id == 4">
-                <v-sheet dark class="px-2" align="center" rounded color="green darken-3">
-                中上級
+                <v-sheet
+                  dark
+                  class="px-2"
+                  align="center"
+                  rounded
+                  color="green darken-3"
+                >
+                  中上級
                 </v-sheet>
               </td>
               <td v-if="student.level_id == 5">
-                <v-sheet dark class="px-2" align="center" rounded color="green darken-4">
-                上級
+                <v-sheet
+                  dark
+                  class="px-2"
+                  align="center"
+                  rounded
+                  color="green darken-4"
+                >
+                  上級
                 </v-sheet>
               </td>
               <td>
                 <div class="btn_group">
-                  <NuxtLink :to="'/progress/' + student.id">
-                    <v-btn>
-                      <v-icon>mdi-comment-outline</v-icon>
-                    </v-btn>
-                  </NuxtLink>
-                  <NuxtLink :to="'/students/' + student.id">
-                    <v-btn class="btn">
-                      <v-icon>mdi-pencil-outline</v-icon>
-                    </v-btn>
-                  </NuxtLink>
                   <v-btn class="btn" @click="deleteStudents(student.id)">
                     <v-icon> mdi-delete-outline </v-icon>
                   </v-btn>

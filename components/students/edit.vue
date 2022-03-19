@@ -1,11 +1,6 @@
 <template>
-  <v-app>
-    <div @click="close()" class="cover" :class="{ show: isShow }"></div>
-    <v-app-bar dark>
-      <v-app-bar-nav-icon @click="drawer()"></v-app-bar-nav-icon>
-    </v-app-bar>
-    <v-main class="new_wrapper">
-      <v-card dark class="main_content">
+  <v-row>
+      <v-card :dark="isTheme" class="main_content">
         <h2>登録内容編集画面</h2>
         <v-list-item>
           <v-form ref="form" @submit.prevent>
@@ -13,8 +8,7 @@
               <v-col cols="5">
                 <v-text-field
                   v-model="name"
-                  filled
-                  rounded
+
                   dense
                   label="名前"
                   placeholder="阿部 隆"
@@ -24,8 +18,7 @@
               <v-col cols="2">
                 <v-text-field
                   v-model="age"
-                  filled
-                  rounded
+
                   dense
                   label="年齢"
                   placeholder="21"
@@ -35,8 +28,7 @@
               <v-col cols="5">
                 <v-text-field
                   v-model="birth"
-                  filled
-                  rounded
+
                   dense
                   label="生年月日"
                   placeholder="2000/6/21"
@@ -46,8 +38,7 @@
               <v-col cols="12">
                 <v-text-field
                   v-model="mail"
-                  filled
-                  rounded
+
                   dense
                   label="メールアドレス"
                   placeholder="abe-takashi0622@email.com"
@@ -57,8 +48,7 @@
               <v-col cols="6">
                 <v-text-field
                   v-model="tel"
-                  filled
-                  rounded
+
                   dense
                   label="電話番号"
                   placeholder="080-1234-5678"
@@ -68,27 +58,39 @@
               <v-col cols="6">
                 <v-select
                   :items="plans"
-                  filled
+
                   label="プラン"
                   dense
-                  rounded
                   v-model="plan"
                   :rules="[rules.required]"
                   placeholder="---"
                 ></v-select>
               </v-col>
-              <v-col cols="6">
-                <v-select
-                  :items="selectLevel"
-                  filled
-                  label="レベル"
-                  dense
-                  rounded
-                  v-model="level"
-                  :rules="[rules.required]"
-                  placeholder="---"
-                ></v-select>
-              </v-col>
+          <v-col cols="6">
+            <v-text-field
+              v-model="experience_month"
+              label="経験月数"
+              placeholder="12"
+              :rules="[rules.required]"
+            />
+          </v-col>
+          <v-col cols="6">
+            <v-text-field
+              v-model="skill"
+              label="スキル"
+              placeholder="PHP/Java"
+              :rules="[rules.required]"
+            />
+          </v-col>
+          <v-col cols="6">
+            <v-select
+              :items="plans"
+              label="プラン"
+              v-model="plan"
+              :rules="[rules.required]"
+              placeholder="---"
+            ></v-select>
+          </v-col>
             </v-row>
             <v-btn
               color="cyan"
@@ -102,8 +104,7 @@
           </v-form>
         </v-list-item>
       </v-card>
-    </v-main>
-  </v-app>
+  </v-row>
 </template>
 
 <script>
@@ -135,7 +136,7 @@ export default {
     };
   },
   computed: {
-    ...mapState(["student", "isShow", "levels"]),
+    ...mapState(["student", "isShow", "levels", "isTheme"]),
   },
   mounted() {
     this.getStudent(this.$route.params.id).then(() => {

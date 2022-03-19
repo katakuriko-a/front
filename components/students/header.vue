@@ -28,18 +28,13 @@
       >
       <v-btn class="logout" @click="logout()">ログアウト</v-btn>
     </v-app-bar>
-    <CurrentUser/>
   </div>
 </template>
 
 <script>
 import { mapActions, mapState } from "vuex";
-import CurrentUser from "~/components/students/currentUser";
 
 export default {
-  components: {
-    CurrentUser,
-  },
 
   data() {
     return {
@@ -68,7 +63,7 @@ export default {
 </script>
 
 <style>
-.header{
+.header {
   position: fixed;
   z-index: 200;
 }

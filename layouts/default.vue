@@ -6,6 +6,7 @@
       absolute
       temporary
       hide-overlay
+      style="z-index: 1000;"
     >
       <v-list>
         <v-list-item-group>
@@ -18,7 +19,14 @@
           <NuxtLink to="/students/create">
             <v-btn class="btn_new">
               <fa class="fas fa-home" :icon="['fas', 'plus']" /><span
-                >新規登録画面</span
+                >生徒の新規登録画面</span
+              >
+            </v-btn>
+          </NuxtLink>
+          <NuxtLink to="/teachers/create">
+            <v-btn class="btn_new">
+              <fa class="fas fa-home" :icon="['fas', 'plus']" /><span
+                >先生の新規登録画面</span
               >
             </v-btn>
           </NuxtLink>

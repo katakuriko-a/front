@@ -2,21 +2,21 @@
   <v-app id="app">
     <Appbar />
     <Sidebar />
-    <TeachersList />
+    <StudentsList />
   </v-app>
 </template>
 
 <script>
 import Sidebar from "~/components/students/sidebar";
 import Appbar from "~/components/students/appbar";
-import TeachersList from "~/components/lists/teachers";
+import StudentsList from "~/components/lists/students";
 
 import { mapState } from "vuex";
 export default {
   components: {
     Appbar,
     Sidebar,
-    TeachersList,
+    StudentsList,
   },
   computed: {
     ...mapState(["isTheme"]),
