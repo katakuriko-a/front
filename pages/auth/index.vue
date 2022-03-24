@@ -15,7 +15,7 @@
       </v-card-title>
       <v-card-text>
         <v-alert type="error" v-if="isError">
-          メールアドレスまたはパスワードが間違っています。
+          {{ errorText }}
         </v-alert>
 
         <v-form @submit.prevent="onSubmit" class="mt-0">
@@ -79,6 +79,7 @@ export default {
       birth: "",
       tel: "",
       plan: "",
+      errorText: "エラーが発生しました。しばらく時間をおいてお試しください",
       plans: ["PREMIUM", "STANDARD"],
       experience_month: "",
       skill: "",
@@ -99,27 +100,60 @@ export default {
       "nuxtServerInit",
       "onAuthStateChangedAction",
       "login",
-      "getCurrentStudentId",
-      "getStudentWithEmail",
+      "getCurrentUserId",
+      "getUserWithEmail",
     ]),
     ...mapMutations(["setRolesId"]),
 
     onSubmit() {
-      this.getStudentWithEmail(this.mail)
-        .then(() => {
-          this.$fire.auth.signInWithEmailAndPassword(this.mail, this.password);
-        })
-        .then(() => {
-          const info = {
-            email: this.mail,
-            password: this.password,
-          };
-          this.login(info);
-          this.getCurrentStudentId(this.mail);
-        })
-        .catch((error) => {
-          this.isError = true;
-        });
+      this.getUserWithEmail(this.mail).then(() => {
+        this.$fire.auth
+          .signInWithEmailAndPassword(this.mail, this.password)
+          .catch((e) => {
+            this.isError = true;
+            console.log(e.code);
+            if (e.code == "auth/email-already-in-use") {
+              this.errorText = "このメールアドレスは使用されています";
+            } else if (e.code == "auth/user-disabled") {
+              this.errorText = "サービスの利用が停止されています";
+            } else if (e.code == "auth/user-not-found") {
+              this.errorText = "メールアドレスまたはパスワードが違います";
+            } else if (e.code == "auth/email-already-in-use") {
+              this.errorText = "このメールアドレスは使用されています";
+            } else if (e.code == "auth/weak-password") {
+              this.errorText = "パスワードは6文字以上にしてください";
+            } else if (e.code == "auth/wrong-password") {
+              this.errorText = "メールアドレスまたはパスワードが違います";
+            } else if (e.code == "auth/popup-blocked") {
+              this.errorText =
+                "認証ポップアップがブロックされました。ポップアップブロックをご利用の場合は設定を解除してください";
+            } else if (
+              e.code == "auth/operation-not-supported-in-this-environment" ||
+              "auth/auth-domain-config-required" ||
+              "auth/operation-not-allowed" ||
+              "auth/unauthorized-domain"
+            ) {
+              this.errorText = "現在この認証方法はご利用頂けません";
+            } else if (e.code == "auth/wrong-password") {
+              this.errorText = "メールアドレスまたはパスワードが違います";
+            } else if (e.code == "auth/wrong-password") {
+              this.errorText = "メールアドレスまたはパスワードが違います";
+            } else if (e.code == "auth/wrong-password") {
+              this.errorText = "メールアドレスまたはパスワードが違います";
+            } else if (e.code == "auth/requires-recent-login") {
+              this.errorText = "認証の有効期限が切れています";
+            }
+            throw "エラーが発生しました!";
+          })
+          .then(() => {
+            const info = {
+              email: this.mail,
+              password: this.password,
+            };
+            this.login(info);
+            this.getCurrentUserId(this.mail);
+          });
+      });
     },
   },
 };

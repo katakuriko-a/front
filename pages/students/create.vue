@@ -144,10 +144,10 @@ export default {
     });
   },
   methods: {
-    ...mapActions(["addStudent", "drawer", "close", "getLevels"]),
+    ...mapActions(["addUser", "drawer", "close", "getLevels"]),
     store() {
       if (this.$refs.form.validate()) {
-        this.$store.dispatch("addStudent", {
+        this.$store.dispatch("addUser", {
           name: this.name,
           age: this.age,
           birth: this.birth,

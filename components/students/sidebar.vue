@@ -20,6 +20,7 @@
       <v-list-item
         nuxt
         :to="`/mypage`"
+        v-if="roles_id !== 99"
       >
         <v-list-item-icon>
           <v-icon>mdi-calendar</v-icon>
@@ -27,6 +28,19 @@
 
         <v-list-item-content>
           <v-list-item-title>予約情報の確認</v-list-item-title>
+        </v-list-item-content>
+      </v-list-item>
+      <v-list-item
+        nuxt
+        :to="`/admin`"
+        v-if="roles_id == 99"
+      >
+        <v-list-item-icon>
+          <v-icon>mdi-account-box-multiple</v-icon>
+        </v-list-item-icon>
+
+        <v-list-item-content>
+          <v-list-item-title>管理ページ</v-list-item-title>
         </v-list-item-content>
       </v-list-item>
 
@@ -107,7 +121,7 @@ export default {
   },
   mounted() {
     console.log(this.roles_id);
-    this.getStudent(this.current_student_id).then(() => {
+    this.getUser(this.current_student_id).then(() => {
       this.name = this.student.name;
       this.age = this.student.age;
       this.birth = this.student.birth;
@@ -118,7 +132,7 @@ export default {
     });
   },
   methods: {
-    ...mapActions(["getStudent"]),
+    ...mapActions(["getUser"]),
     ...mapMutations(["setPage", "setRolesId"]),
   },
 };

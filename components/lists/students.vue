@@ -14,12 +14,12 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="student in students" :key="student.id">
-              <td>{{ student.name }}</td>
-              <td>{{ student.age }}</td>
-              <td>{{ student.plan }}</td>
-              <td>{{ student.experience_month }}</td>
-              <td>{{ student.skill }}</td>
+            <tr v-for="student in students" :key="student.id" >
+              <td >{{ student.name }}</td>
+              <td >{{ student.age }}</td>
+              <td >{{ student.plan }}</td>
+              <td >{{ student.experience_month }}</td>
+              <td >{{ student.skill }}</td>
 
             </tr>
           </tbody>
@@ -51,7 +51,7 @@ export default {
   },
 
   mounted() {
-    this.getStudents();
+    this.getUsers();
     this.close();
   },
   computed: {
@@ -59,7 +59,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(["getStudents", "deleteStudents", "close"]),
+    ...mapActions(["getUsers", "deleteStudents", "close"]),
   },
 };
 </script>

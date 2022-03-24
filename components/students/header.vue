@@ -1,7 +1,6 @@
 <template>
   <div>
-    <v-app-bar :dark="isTheme" class="header">
-      <v-app-bar-nav-icon @click="drawer()"></v-app-bar-nav-icon>
+    <v-app-bar :dark="isTheme" class="header" app>
 
       <v-btn
         @click="popupOpen()"
@@ -55,7 +54,6 @@ export default {
       "searchStudents",
       "toggleFilter",
       "popupOpen",
-      "drawer",
       "logout",
     ]),
   },

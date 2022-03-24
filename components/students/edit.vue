@@ -139,7 +139,7 @@ export default {
     ...mapState(["student", "isShow", "levels", "isTheme"]),
   },
   mounted() {
-    this.getStudent(this.$route.params.id).then(() => {
+    this.getUser(this.$route.params.id).then(() => {
       this.levels.forEach((level) => {
         this.selectLevel.push(level.name);
       });
@@ -154,7 +154,7 @@ export default {
   },
 
   methods: {
-    ...mapActions(["getStudent", "updateStudent", "close", "drawer"]),
+    ...mapActions(["getUser", "updateStudent", "close", "drawer"]),
     update() {
       if (this.$refs.form.validate()) {
         this.$store.dispatch("updateStudent", {

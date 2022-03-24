@@ -56,7 +56,7 @@ export default {
     ]),
   },
   mounted() {
-    this.getStudent(this.current_student_id).then(() => {
+    this.getUser(this.current_student_id).then(() => {
       this.name = this.student.name;
       this.age = this.student.age;
       this.birth = this.student.birth;
@@ -69,7 +69,7 @@ export default {
     // this.getReservedTeachers(this.$route.params.id);
   },
   methods: {
-    ...mapActions(["getStudent", "close", "drawer"]),
+    ...mapActions(["getUser", "close", "drawer"]),
     ...mapMutations(["setPage", "setRolesId"]),
   },
 };

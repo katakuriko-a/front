@@ -97,7 +97,7 @@ export default {
   },
   methods: {
     ...mapActions([
-      "getStudent",
+      "getUser",
       "close",
       "drawer",
       "getReservedTeachers",
