@@ -32,73 +32,53 @@
                   :rules="[rules.required]"
                 />
               </v-col>
-              <v-col cols="5">
+            </v-row>
+            <v-row>
+              <v-col cols="4">
                 <v-text-field
-                  v-model="birth"
+                  v-model="career"
                   filled
                   rounded
                   dense
-                  label="生年月日"
-                  placeholder="2000/6/21"
+                  label="メンター歴"
+                  placeholder="3年"
                   :rules="[rules.required]"
                 />
               </v-col>
-              <v-col cols="12">
+              <v-col cols="4">
                 <v-text-field
-                  v-model="mail"
+                  v-model="fee"
                   filled
                   rounded
                   dense
-                  label="メールアドレス"
-                  placeholder="abe-takashi0622@email.com"
-                  :rules="[rules.required, rules.email]"
-                />
-              </v-col>
-              <v-col cols="6">
-                <v-text-field
-                  v-model="tel"
-                  filled
-                  rounded
-                  dense
-                  label="電話番号"
-                  placeholder="080-1234-5678"
+                  label="料金/1時間"
+                  placeholder="1000円"
                   :rules="[rules.required]"
                 />
               </v-col>
-              <v-col cols="6">
-                <v-select
-                  :items="plans"
+              <v-col cols="4">
+                <v-text-field
+                  v-model="language"
                   filled
-                  label="プラン"
-                  dense
                   rounded
-                  v-model="plan"
+                  dense
+                  label="使用言語"
+                  placeholder="Java"
                   :rules="[rules.required]"
-                  placeholder="---"
-                ></v-select>
+                />
               </v-col>
-              <v-col cols="6">
-                <v-select
-                  :items="selectLevel"
-                  filled
-                  label="レベル"
-                  dense
+              <v-col class="d-flex">
+                <v-btn
+                  color="cyan"
                   rounded
-                  v-model="level"
-                  :rules="[rules.required]"
-                  placeholder="---"
-                ></v-select>
+                  type="submit"
+                  @click="store()"
+                  class="signup_btn"
+                >
+                  <v-icon>mdi-plus</v-icon>新規登録
+                </v-btn>
               </v-col>
             </v-row>
-            <v-btn
-              color="cyan"
-              rounded
-              type="submit"
-              @click="store()"
-              class="signup_btn"
-            >
-              <v-icon>mdi-plus</v-icon>新規登録
-            </v-btn>
           </v-form>
         </v-list-item>
       </v-card>
@@ -119,42 +99,29 @@ export default {
   data: () => ({
     name: "",
     age: "",
-    birth: "",
-    mail: "",
-    tel: "",
-    plan: "",
-    level: "",
-    plans: ["PREMIUM", "STANDARD"],
-    selectLevel: [],
+    career: "",
+    fee: "",
+    language: "",
     rules: {
       required: (value) => !!value || "必須項目です。",
-      email: (value) =>
-        /.+@.+/.test(value) || "メールアドレスの形式が正しくありません",
     },
   }),
   computed: {
-    ...mapState(["isShow", "levels"]),
+    ...mapState(["isShow"]),
   },
   mounted() {
     this.close();
-    this.getLevels().then(() => {
-      this.levels.forEach((level) => {
-        this.selectLevel.push(level.name);
-      });
-    });
   },
   methods: {
-    ...mapActions(["addUser", "drawer", "close", "getLevels"]),
+    ...mapActions(["addTeacher", "drawer", "close"]),
     store() {
       if (this.$refs.form.validate()) {
-        this.$store.dispatch("addUser", {
+        this.$store.dispatch("addTeacher", {
           name: this.name,
           age: this.age,
-          birth: this.birth,
-          mail: this.mail,
-          tel: this.tel,
-          plan: this.plan,
-          level: this.level,
+          career: this.career,
+          fee: this.fee,
+          language: this.language,
         });
       }
     },
@@ -172,7 +139,7 @@ export default {
 .v-main {
   height: 100vh;
 }
-.v-toolbar{
+.v-toolbar {
   flex: 0;
 }
 </style>
